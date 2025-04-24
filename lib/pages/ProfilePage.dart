@@ -82,7 +82,7 @@ class ProfilePage extends StatelessWidget {
                       Text(
                         'Recent Makeups',
                         style: TextStyle(
-                          fontSize: 20,
+                          fontSize: 22,
                           color: appColors['primaryDark1'] ?? Colors.black,
                           //fontWeight: FontWeight.bold,
                         ),
@@ -104,19 +104,31 @@ class ProfilePage extends StatelessWidget {
                     ],
                   ),
                 ),
+                // 4. The Element (Button)
+                Positioned(
+                  bottom: 15,
+                  left: 0,
+                  right: 0,
+                  child: Center(
+                    child: TextButton(
+                      onPressed: () {
+                        _showSnackBar(context, 'TextButton pressed!');
+                      },
+                      child:
+                      Text('See all history',
+                        style: TextStyle(
+                          color: appColors['primaryDark1'] ?? Colors.black,
+                          fontSize: 18,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
               ],
             )
           ],
         ),
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     _showSnackBar(context, 'Floating Action Button pressed!');
-      //   },
-      //   tooltip: 'Add',
-      //   child: const Icon(Icons.add),
-      // ),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 
