@@ -10,6 +10,8 @@ void main() {
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
 
+  // Halo ini darren
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
