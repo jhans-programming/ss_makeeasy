@@ -8,6 +8,7 @@ Map<String, Color> appColors = {
   "primaryLight2": Color(0xfff17fca),
   "primaryLight3": Color(0xffff99dc),
   "primaryLight4": Color(0xffffebfc),
+  "primaryLight5": Color(0xfffff8fe),
 
   "secondary": Color(0xffff7192),
   "secondaryLight1": Color(0xffffafc1),
