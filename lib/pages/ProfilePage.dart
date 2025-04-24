@@ -111,9 +111,9 @@ class ProfilePage extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      _buildRecentMakeupBox('assets/images/profile.jpg'),
-                      _buildRecentMakeupBox('assets/images/profile.jpg'),
-                      _buildRecentMakeupBox('assets/images/profile.jpg'),
+                      _buildRecentMakeupBox(context, 'assets/images/profile.jpg'),
+                      _buildRecentMakeupBox(context, 'assets/images/profile.jpg'),
+                      _buildRecentMakeupBox(context, 'assets/images/profile.jpg'),
                     ],
                   ),
                 ),
@@ -150,9 +150,12 @@ class ProfilePage extends StatelessWidget {
   }
 
   // Helper function to build the small boxes
-  static Widget _buildRecentMakeupBox(String imagePath) {
+  static Widget _buildRecentMakeupBox(BuildContext context, String imagePath) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final boxWidth = (screenWidth - 125) / 3;
+
     return SizedBox(
-      width: 95,
+      width: boxWidth,
       height: 120,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
