@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:makeeasy/utils/appStyle.dart';
+import 'package:makeeasy/pages/SettingsPage.dart';
+import 'package:makeeasy/pages/HistoryPage.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -9,13 +11,27 @@ class ProfilePage extends StatelessWidget {
     return Scaffold(
       backgroundColor: appColors['primaryLight4'],
       appBar: AppBar(
-        title: const Text('MY PROFILE'),
+        title: Text(
+          'MY PROFILE',
+          style: TextStyle(
+            color: appColors['primaryDark1'] ?? Colors.black,
+            fontSize: 25,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         actions: <Widget>[
           IconButton(
-            icon: const Icon(Icons.settings),
+            icon: Icon(
+              Icons.settings,
+              size: 30,
+              color: appColors['primaryDark1'] ?? Colors.black,),
             tooltip: 'Settings',
             onPressed: () {
-              _showSnackBar(context, 'Settings pressed!');
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(builder: (context) => const SettingsPage()),
+              // );
+              _showSnackBar(context, 'Settings button pressed');
             },
           ),
         ],
@@ -23,11 +39,8 @@ class ProfilePage extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
-          //crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Row(
-              //mainAxisAlignment: MainAxisAlignment.center,
-              //crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 ClipOval(
                   child: Image(
@@ -112,7 +125,11 @@ class ProfilePage extends StatelessWidget {
                   child: Center(
                     child: TextButton(
                       onPressed: () {
-                        _showSnackBar(context, 'TextButton pressed!');
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(builder: (context) => const HistoryPage()),
+                        // );
+                        _showSnackBar(context, 'See all history button pressed');
                       },
                       child:
                       Text('See all history',
