@@ -24,14 +24,37 @@ class ProfilePage extends StatelessWidget {
             icon: Icon(
               Icons.settings,
               size: 30,
-              color: appColors['primaryDark1'] ?? Colors.black,),
+              color: appColors['primaryDark1'] ?? Colors.black,
+            ),
             tooltip: 'Settings',
             onPressed: () {
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(builder: (context) => const SettingsPage()),
-              // );
-              _showSnackBar(context, 'Settings button pressed');
+              Navigator.of(context).push(
+                PageRouteBuilder(
+                  transitionDuration: const Duration(milliseconds: 500),
+                  pageBuilder:
+                      (context, animation, secondaryAnimation) =>
+                          const SettingsPage(),
+                  transitionsBuilder: (
+                    context,
+                    animation,
+                    secondaryAnimation,
+                    child,
+                  ) {
+                    const begin = Offset(1.0, 0.0);
+                    const end = Offset.zero;
+                    const curve = Curves.ease;
+
+                    var tween = Tween(
+                      begin: begin,
+                      end: end,
+                    ).chain(CurveTween(curve: curve));
+                    return SlideTransition(
+                      position: animation.drive(tween),
+                      child: child,
+                    );
+                  },
+                ),
+              );
             },
           ),
         ],
@@ -44,7 +67,9 @@ class ProfilePage extends StatelessWidget {
               children: <Widget>[
                 ClipOval(
                   child: Image(
-                    image: const AssetImage('assets/images/profile.jpg'), // Use your asset image
+                    image: const AssetImage(
+                      'assets/images/profile.jpg',
+                    ), // Use your asset image
                     width: 100,
                     height: 100,
                     fit: BoxFit.cover, // Important: Use BoxFit.cover
@@ -58,7 +83,7 @@ class ProfilePage extends StatelessWidget {
                     fontSize: 25,
                     fontWeight: FontWeight.bold,
                   ),
-                )
+                ),
               ],
             ),
             const SizedBox(height: 20),
@@ -101,7 +126,7 @@ class ProfilePage extends StatelessWidget {
                         ),
                       ),
                     ],
-                  )
+                  ),
                 ),
                 // 3. The Elements (Boxes of recent makeup images)
                 Positioned(
@@ -111,9 +136,18 @@ class ProfilePage extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      _buildRecentMakeupBox(context, 'assets/images/profile.jpg'),
-                      _buildRecentMakeupBox(context, 'assets/images/profile.jpg'),
-                      _buildRecentMakeupBox(context, 'assets/images/profile.jpg'),
+                      _buildRecentMakeupBox(
+                        context,
+                        'assets/images/profile.jpg',
+                      ),
+                      _buildRecentMakeupBox(
+                        context,
+                        'assets/images/profile.jpg',
+                      ),
+                      _buildRecentMakeupBox(
+                        context,
+                        'assets/images/profile.jpg',
+                      ),
                     ],
                   ),
                 ),
@@ -129,10 +163,13 @@ class ProfilePage extends StatelessWidget {
                         //   context,
                         //   MaterialPageRoute(builder: (context) => const HistoryPage()),
                         // );
-                        _showSnackBar(context, 'See all history button pressed');
+                        _showSnackBar(
+                          context,
+                          'See all history button pressed',
+                        );
                       },
-                      child:
-                      Text('See all history',
+                      child: Text(
+                        'See all history',
                         style: TextStyle(
                           color: appColors['primaryDark1'] ?? Colors.black,
                           fontSize: 18,
@@ -142,7 +179,7 @@ class ProfilePage extends StatelessWidget {
                   ),
                 ),
               ],
-            )
+            ),
           ],
         ),
       ),
@@ -159,19 +196,14 @@ class ProfilePage extends StatelessWidget {
       height: 120,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
-        child: Image.asset(imagePath,
-        fit: BoxFit.cover,
-        ),
+        child: Image.asset(imagePath, fit: BoxFit.cover),
       ),
     );
   }
 
   void _showSnackBar(BuildContext context, String message) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        duration: const Duration(seconds: 2),
-      ),
+      SnackBar(content: Text(message), duration: const Duration(seconds: 2)),
     );
   }
 }
