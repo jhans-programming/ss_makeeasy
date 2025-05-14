@@ -4,6 +4,7 @@ import 'package:makeeasy/pages/MainScreen.dart';
 import 'package:makeeasy/utils/appStyle.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MainApp());
 }
 
