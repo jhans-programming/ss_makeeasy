@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:makeeasy/pages/HistoryDetailPage.dart';
+import 'package:makeeasy/pages/HistoryPage.dart'; // Ensure this file contains the HistoryPage class
 import 'package:makeeasy/pages/RegisterPage.dart';
 import 'package:makeeasy/pages/MainScreen.dart';
 import 'package:makeeasy/utils/appStyle.dart';
@@ -31,7 +33,9 @@ class MainApp extends StatelessWidget {
           onSurface: Colors.black,
         ),
       ),
-      home: MainScreen(),
+      //ini untuk sementara -than
+      home: HistoryPage(),
+      //home: MainScreen(),
     );
   }
 }
