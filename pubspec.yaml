@@ -9,6 +9,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  http: ^1.4.0
+  flutter_markdown: ^0.6.23
 
 dev_dependencies:
   flutter_test:
@@ -28,4 +30,5 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/logo.png
+    - assets/images/lippie_logo.png
     - assets/images/profile.jpg
