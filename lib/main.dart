@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:makeeasy/pages/HistoryDetailPage.dart';
+import 'package:makeeasy/pages/HistoryPage.dart'; // Ensure this file contains the HistoryPage class
+import 'package:makeeasy/pages/RegisterPage.dart';
+
 import 'package:makeeasy/pages/MainScreen.dart';
 
 final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.system);
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MainApp());
 }
 
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
+
+  // Halo ini thania :V
 
   @override
   Widget build(BuildContext context) {
