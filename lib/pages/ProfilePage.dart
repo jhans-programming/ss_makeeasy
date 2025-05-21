@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:makeeasy/utils/appStyle.dart';
 import 'package:makeeasy/pages/SettingsPage.dart';
 import 'package:makeeasy/pages/HistoryPage.dart';
+import 'package:makeeasy/pages/LippieChatPage.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -179,6 +180,34 @@ class ProfilePage extends StatelessWidget {
                   ),
                 ),
               ],
+            ),
+            const SizedBox(height: 20),
+            
+            
+            
+            // Button to Lippie
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => LippieChatPage()),
+                );
+                //_showSnackBar(context, 'Lippie button pressed');
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: appColors['primaryDark1'],
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+              ),
+              child: Text(
+                'Lippie',
+                style: TextStyle(
+                  color: appColors['primaryLight5'] ?? Colors.white,
+                  fontSize: 20,
+                ),
+              ),
             ),
           ],
         ),
