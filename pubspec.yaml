@@ -9,6 +9,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  http: ^1.4.0
+  flutter_markdown: ^0.6.23
   camera: ^0.11.1
   camera_android: ^0.10.10+1
   google_mlkit_face_mesh_detection: ^0.4.1
@@ -35,5 +37,6 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/logo.png
+    - assets/images/lippie_logo.png
     - assets/images/dummylook1.jpg
     - assets/images/profile.jpg
