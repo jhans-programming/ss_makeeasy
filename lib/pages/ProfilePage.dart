@@ -9,23 +9,14 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: appColors['primaryLight4'],
       appBar: AppBar(
         title: Text(
           'MY PROFILE',
-          style: TextStyle(
-            color: appColors['primaryDark1'] ?? Colors.black,
-            fontSize: 25,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
         ),
         actions: <Widget>[
           IconButton(
-            icon: Icon(
-              Icons.settings,
-              size: 30,
-              color: appColors['primaryDark1'] ?? Colors.black,
-            ),
+            icon: Icon(Icons.settings, size: 30),
             tooltip: 'Settings',
             onPressed: () {
               Navigator.of(context).push(
@@ -79,7 +70,7 @@ class ProfilePage extends StatelessWidget {
                 Text(
                   'Nana',
                   style: TextStyle(
-                    color: appColors['primaryDark1'] ?? Colors.black,
+                    // color: appColors['primaryDark1'] ?? Colors.black,
                     fontSize: 25,
                     fontWeight: FontWeight.bold,
                   ),
@@ -94,7 +85,7 @@ class ProfilePage extends StatelessWidget {
                   width: double.infinity,
                   height: 250,
                   decoration: BoxDecoration(
-                    color: appColors['primaryLight5'],
+                    color: Theme.of(context).colorScheme.surface,
                     borderRadius: BorderRadius.circular(30),
                     boxShadow: [
                       BoxShadow(
@@ -114,14 +105,14 @@ class ProfilePage extends StatelessWidget {
                       Icon(
                         Icons.history,
                         size: 30,
-                        color: appColors['primaryDark1'] ?? Colors.black,
+                        // color: appColors['primaryDark1'] ?? Colors.black,
                       ),
                       const SizedBox(width: 10),
                       Text(
                         'Recent Makeups',
                         style: TextStyle(
                           fontSize: 22,
-                          color: appColors['primaryDark1'] ?? Colors.black,
+                          // color: appColors['primaryDark1'] ?? Colors.black,
                           //fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -159,19 +150,17 @@ class ProfilePage extends StatelessWidget {
                   child: Center(
                     child: TextButton(
                       onPressed: () {
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(builder: (context) => const HistoryPage()),
-                        // );
-                        _showSnackBar(
+                        Navigator.push(
                           context,
-                          'See all history button pressed',
+                          MaterialPageRoute(
+                            builder: (context) => const HistoryPage(),
+                          ),
                         );
                       },
                       child: Text(
                         'See all history',
                         style: TextStyle(
-                          color: appColors['primaryDark1'] ?? Colors.black,
+                          // color: appColors['primaryDark1'] ?? Colors.black,
                           fontSize: 18,
                         ),
                       ),

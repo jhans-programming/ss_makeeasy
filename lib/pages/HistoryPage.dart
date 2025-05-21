@@ -185,10 +185,7 @@ class _HistoryPageState extends State<HistoryPage> {
                       IconButton(
                         icon: const Icon(Icons.arrow_back),
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (_) => const HomePage()),
-                          );
+                          Navigator.pop(context);
                         },
                       ),
                       const Text(

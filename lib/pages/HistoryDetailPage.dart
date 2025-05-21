@@ -30,13 +30,12 @@ class HistoryDetailPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: appColors['primaryLight4'],
         title: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             IconButton(
               icon: const Icon(Icons.arrow_back_ios_new_outlined),
-              color: appColors['primaryDark1'],
+              // color: appColors['primaryDark1'],
               onPressed: () {
                 Navigator.pop(context);
               },
@@ -51,10 +50,8 @@ class HistoryDetailPage extends StatelessWidget {
                 ),
               ),
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const HistoryPage()),
-                );
+                // TODO: Save changes
+                Navigator.pop(context);
               },
               child: const Text("Save"),
             ),
@@ -65,7 +62,7 @@ class HistoryDetailPage extends StatelessWidget {
       body: SingleChildScrollView(
         child: Container(
           width: double.infinity,
-          color: appColors['primaryLight4'],
+          // color: appColors['primaryLight4'],
           child: ConstrainedBox(
             constraints: BoxConstraints(
               minHeight: MediaQuery.of(context).size.height,
@@ -126,7 +123,7 @@ class HistoryDetailPage extends StatelessWidget {
                                   date, //the date is not editable
                                   style: const TextStyle(
                                     fontSize: 16,
-                                    color: Colors.grey,
+                                    // color: Colors.black,
                                   ),
                                 ),
                               ],
