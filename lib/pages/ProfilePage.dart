@@ -12,13 +12,13 @@ class ProfilePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'MY PROFILE',
-          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+          'My Profile',
+          style: TextStyle(color: Theme.of(context).colorScheme.primary),
         ),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.settings, size: 30),
-            tooltip: 'Settings',
+            // tooltip: 'Settings',
             onPressed: () {
               Navigator.of(context).push(
                 PageRouteBuilder(
@@ -55,19 +55,39 @@ class ProfilePage extends StatelessWidget {
         padding: const EdgeInsets.all(20.0),
         child: Column(
           children: <Widget>[
-            Row(
+            Column(
               children: <Widget>[
-                ClipOval(
-                  child: Image(
-                    image: const AssetImage(
-                      'assets/images/profile.jpg',
-                    ), // Use your asset image
-                    width: 100,
-                    height: 100,
-                    fit: BoxFit.cover, // Important: Use BoxFit.cover
+                Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: Theme.of(context).colorScheme.secondary,
+                      width: 2,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.secondary.withAlpha(150),
+                        blurRadius: 15,
+                        spreadRadius: 8,
+                      ),
+                    ],
+                  ),
+                  child: ClipOval(
+                    child: Image(
+                      image: const AssetImage(
+                        'assets/images/profile.jpg',
+                      ), // Use your asset image
+                      width: 150,
+                      height: 150,
+                      fit: BoxFit.cover, // Important: Use BoxFit.cover
+                    ),
                   ),
                 ),
-                const SizedBox(width: 20),
+
+                SizedBox(height: 20),
+
                 Text(
                   'Nana',
                   style: TextStyle(
@@ -78,54 +98,51 @@ class ProfilePage extends StatelessWidget {
                 ),
               ],
             ),
+
             const SizedBox(height: 20),
-            Stack(
-              children: <Widget>[
-                // 1. The Box
-                Container(
-                  width: double.infinity,
-                  height: 250,
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surface,
-                    borderRadius: BorderRadius.circular(30),
-                    boxShadow: [
-                      BoxShadow(
-                        color: appColors['primaryDark1']!,
-                        blurRadius: 10,
-                        offset: const Offset(5, 5),
-                      ),
-                    ],
+
+            // Recent Makeups Card
+            Container(
+              padding: EdgeInsets.all(24),
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.surface,
+                borderRadius: BorderRadius.circular(30),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withAlpha(50),
+                    blurRadius: 10,
+                    offset: const Offset(5, 5),
                   ),
-                ),
-                // 2. The Elements (Icon, Text)
-                Positioned(
-                  top: 20,
-                  left: 30,
-                  child: Row(
+                ],
+              ),
+              child: Column(
+                children: [
+                  // 2. The Elements (Icon, Text)
+                  Row(
                     children: [
                       Icon(
                         Icons.history,
                         size: 30,
-                        // color: appColors['primaryDark1'] ?? Colors.black,
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                       const SizedBox(width: 10),
                       Text(
                         'Recent Makeups',
                         style: TextStyle(
-                          fontSize: 22,
-                          // color: appColors['primaryDark1'] ?? Colors.black,
-                          //fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.onSurface,
+                          fontWeight: FontWeight.bold,
+
+                          // fontSize: 18,
                         ),
                       ),
                     ],
                   ),
-                ),
-                // 3. The Elements (Boxes of recent makeup images)
-                Positioned(
-                  top: 60,
-                  left: 30,
-                  right: 30,
-                  child: Row(
+
+                  SizedBox(height: 16),
+
+                  // 3. The Elements (Boxes of recent makeup images)
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       _buildRecentMakeupBox(
@@ -142,13 +159,11 @@ class ProfilePage extends StatelessWidget {
                       ),
                     ],
                   ),
-                ),
-                // 4. The Element (Button)
-                Positioned(
-                  bottom: 15,
-                  left: 0,
-                  right: 0,
-                  child: Center(
+
+                  SizedBox(height: 16),
+
+                  // 4. The Element (Button)
+                  Center(
                     child: TextButton(
                       onPressed: () {
                         Navigator.push(
@@ -161,19 +176,17 @@ class ProfilePage extends StatelessWidget {
                       child: Text(
                         'See all history',
                         style: TextStyle(
-                          // color: appColors['primaryDark1'] ?? Colors.black,
-                          fontSize: 18,
+                          color: Theme.of(context).colorScheme.secondary,
+                          // fontSize: 18,
                         ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             const SizedBox(height: 20),
-            
-            
-            
+
             // Button to Lippie
             ElevatedButton(
               onPressed: () {
@@ -184,8 +197,11 @@ class ProfilePage extends StatelessWidget {
                 //_showSnackBar(context, 'Lippie button pressed');
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: appColors['primaryDark1'],
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                backgroundColor: Theme.of(context).colorScheme.secondary,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 10,
+                ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30),
                 ),
@@ -211,7 +227,7 @@ class ProfilePage extends StatelessWidget {
 
     return SizedBox(
       width: boxWidth,
-      height: 120,
+      height: 240,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
         child: Image.asset(imagePath, fit: BoxFit.cover),

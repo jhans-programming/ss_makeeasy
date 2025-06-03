@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:makeeasy/pages/HistoryPage.dart';
+import 'package:makeeasy/states/history_notifier.dart';
 import 'package:makeeasy/utils/appStyle.dart';
+import 'package:provider/provider.dart';
 
 class HistoryDetailPage extends StatelessWidget {
   final String title;
@@ -18,112 +20,121 @@ class HistoryDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController titleController = TextEditingController(
-      text: title,
-    );
-    // final TextEditingController dateController = TextEditingController(
-    //   text: "May 6, 2025",
-    // );
-    final TextEditingController descriptionController = TextEditingController(
-      text: description,
-    );
+    final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            IconButton(
-              icon: const Icon(Icons.arrow_back_ios_new_outlined),
-              // color: appColors['primaryDark1'],
-              onPressed: () {
-                Navigator.pop(context);
-              },
+    String? _title;
+    String? _desc;
+
+    return Consumer<UserHistoryNotifier>(
+      builder: (context, value, child) {
+        return Scaffold(
+          appBar: AppBar(
+            scrolledUnderElevation: 0,
+            title: Text(
+              "Edit History",
+              style: TextStyle(color: Theme.of(context).colorScheme.primary),
             ),
-            const Spacer(),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: appColors['primaryDark1'],
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
+            actions: [
+              ElevatedButton(
+                onPressed: () {
+                  _formKey.currentState!.save();
+                  if (_formKey.currentState!.validate()) {
+                    // Save state
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('$_title + $_desc'),
+                        duration: const Duration(seconds: 1),
+                      ),
+                    );
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).colorScheme.secondary,
+                  foregroundColor: Colors.white,
                 ),
+                child: Text("Save"),
               ),
-              onPressed: () {
-                // TODO: Save changes
-                Navigator.pop(context);
-              },
-              child: const Text("Save"),
-            ),
-          ],
-        ),
-        automaticallyImplyLeading: false,
-      ),
-      body: SingleChildScrollView(
-        child: Container(
-          width: double.infinity,
-          // color: appColors['primaryLight4'],
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              minHeight: MediaQuery.of(context).size.height,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 30),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(width: 40),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.pink[100],
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.pinkAccent.withAlpha(128),
-                            blurRadius: 10,
-                            offset: const Offset(0, 6),
-                          ),
-                        ],
-                      ),
-                      padding: const EdgeInsets.all(4),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: Image.asset(
-                          imagePath,
-                          width: 200,
-                          height: 200,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 20),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+              SizedBox(width: 16),
+            ],
+          ),
+
+          body: Padding(
+            padding: const EdgeInsets.all(32),
+            child: Card(
+              elevation: 2,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(
                         children: [
-                          SizedBox(
-                            width: 180,
+                          ClipOval(
+                            child: Image(
+                              image: const AssetImage(
+                                'assets/images/profile.jpg',
+                              ), // Use your asset image
+                              width: 150,
+                              height: 150,
+                              fit: BoxFit.cover, // Important: Use BoxFit.cover
+                            ),
+                          ),
+
+                          SizedBox(width: 24),
+
+                          Expanded(
                             child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                TextField(
-                                  controller: titleController,
-                                  decoration: const InputDecoration(
-                                    labelText: "Title",
-                                    border: UnderlineInputBorder(),
-                                  ),
-                                  style: const TextStyle(
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold,
+                                Text(
+                                  "Title",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w900,
+                                    color:
+                                        Theme.of(context).colorScheme.secondary,
                                   ),
                                 ),
-                                const SizedBox(height: 90),
+                                TextFormField(
+                                  decoration: InputDecoration(
+                                    hintText: "Enter a title",
+                                    hintStyle: TextStyle(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onSurface.withAlpha(50),
+                                    ),
+                                    fillColor:
+                                        Theme.of(
+                                          context,
+                                        ).colorScheme.surfaceDim,
+                                    filled: true,
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                      borderSide: BorderSide.none,
+                                    ),
+                                  ),
+
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Please enter a title';
+                                    }
+                                    return null;
+                                  },
+
+                                  onSaved: (value) {
+                                    _title = value;
+                                  },
+                                ),
+
+                                SizedBox(height: 8),
+
                                 Text(
-                                  date, //the date is not editable
+                                  "Saved on $date", //the date is not editable
                                   style: const TextStyle(
                                     fontSize: 16,
-                                    // color: Colors.black,
+                                    color: Colors.grey,
                                   ),
                                 ),
                               ],
@@ -131,27 +142,49 @@ class HistoryDetailPage extends StatelessWidget {
                           ),
                         ],
                       ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 30),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 40),
-                  child: TextField(
-                    controller: descriptionController,
-                    maxLines: 5,
-                    decoration: const InputDecoration(
-                      labelText: "Description",
-                      border: UnderlineInputBorder(),
-                    ),
-                    style: const TextStyle(fontSize: 18),
+
+                      SizedBox(height: 16),
+
+                      Text(
+                        "Description",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w900,
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
+                      ),
+                      TextFormField(
+                        maxLines: 10,
+                        decoration: InputDecoration(
+                          hintText: "Enter a description",
+                          hintStyle: TextStyle(
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.onSurface.withAlpha(50),
+                          ),
+                          fillColor: Theme.of(context).colorScheme.surfaceDim,
+                          filled: true,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(16),
+                            borderSide: BorderSide.none,
+                          ),
+                        ),
+
+                        validator: (value) {
+                          return null;
+                        },
+
+                        onSaved: (value) {
+                          _desc = value;
+                        },
+                      ),
+                    ],
                   ),
                 ),
-              ],
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

@@ -8,25 +8,19 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: appColors['primaryLight4'],
       appBar: AppBar(
-        backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,
             size: 30,
-            color: appColors['primaryDark1'] ?? Colors.black,
+            color: Theme.of(context).colorScheme.primary,
           ),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
           'Settings',
-          style: TextStyle(
-            color: appColors['primaryDark1'] ?? Colors.black,
-            fontSize: 25,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(color: Theme.of(context).colorScheme.primary),
         ),
         centerTitle: true,
       ),
@@ -34,21 +28,24 @@ class SettingsPage extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            _buildSettingsItem(Icons.email, "Change email"),
-            _buildSettingsItem(Icons.lock, "Change password"),
+            _buildSettingsItem(context, Icons.email, "Change email"),
+            _buildSettingsItem(context, Icons.lock, "Change password"),
             _buildSettingsItem(
+              context,
               Icons.color_lens,
               "Theme",
               onTap: () => _toggleTheme(context),
             ),
 
             _buildSettingsItem(
+              context,
               Icons.privacy_tip,
               "Privacy",
               onTap: () => _showPrivacyDialog(context),
             ),
 
             _buildSettingsItem(
+              context,
               Icons.help_outline,
               "FAQ",
               onTap: () => _showFAQDialog(context),
@@ -59,7 +56,7 @@ class SettingsPage extends StatelessWidget {
                 // Add logout functionality here
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: appColors['primaryDark1'],
+                backgroundColor: Theme.of(context).colorScheme.secondary,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30),
                 ),
@@ -80,20 +77,24 @@ class SettingsPage extends StatelessWidget {
   }
 
   Widget _buildSettingsItem(
+    BuildContext context,
     IconData icon,
     String title, {
     VoidCallback? onTap,
   }) {
     return Card(
-      elevation: 2,
+      elevation: 1,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: ListTile(
         leading: Icon(
           icon,
           size: 30,
-          color: appColors['primaryDark1'] ?? Colors.black,
+          color: Theme.of(context).colorScheme.secondary,
         ),
-        title: Text(title, style: TextStyle(color: appColors['primaryDark1'])),
+        title: Text(
+          title,
+          style: TextStyle(color: Theme.of(context).colorScheme.secondary),
+        ),
         onTap:
             onTap ??
             () {
