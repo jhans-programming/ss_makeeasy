@@ -203,7 +203,10 @@ class FaceMeshDetectorPainter extends CustomPainter {
 
       // drawLeftEyeBrow();
       Map<FacePart, dynamic> facePartColors = getFacePartColors(
+        // makeupChoices[MakeupCategory.Category2]![0],
+        // MakeupCategory.Category2,
         makeupChoices[MakeupCategory.Category1]![0],
+        MakeupCategory.Category1,
       );
       //? Eyebrows
       drawFacePart(facePartColors[FacePart.LeftEyebrow], mesh);
@@ -220,6 +223,10 @@ class FaceMeshDetectorPainter extends CustomPainter {
       //? Cheeks
       drawFacePart(facePartColors[FacePart.LeftCheek], mesh);
       drawFacePart(facePartColors[FacePart.RightCheek], mesh);
+
+      //? contours
+      drawFacePart(facePartColors[FacePart.LeftContour], mesh);
+      drawFacePart(facePartColors[FacePart.RightContour], mesh);
 
       //? Lips
       drawFacePart(facePartColors[FacePart.UpperLip], mesh);
