@@ -6,6 +6,7 @@ import 'package:google_mlkit_face_mesh_detection/google_mlkit_face_mesh_detectio
 
 import '../components/HomePage/detector_view.dart';
 import '../painters/face_mesh_detector_painter.dart';
+import '../pages/InstructionsPage.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -42,13 +43,36 @@ class _HomePageState extends State<HomePage> {
         ),
       );
     }
-    return DetectorView(
-      title: 'Face Mesh Detector',
-      customPaint: _customPaint,
-      text: _text,
-      onImage: _processImage,
-      initialCameraLensDirection: _cameraLensDirection,
-      onCameraLensDirectionChanged: (value) => _cameraLensDirection = value,
+    return Scaffold(
+      body: Stack(
+        children: [
+          DetectorView(
+            title: 'Face Mesh Detector',
+            customPaint: _customPaint,
+            text: _text,
+            onImage: _processImage,
+            initialCameraLensDirection: _cameraLensDirection,
+            onCameraLensDirectionChanged:
+                (value) => _cameraLensDirection = value,
+          ),
+          Positioned(
+            top: 40,
+            right: 20,
+            child: IconButton(
+              icon: Icon(Icons.start, size: 30),
+              color: Theme.of(context).colorScheme.primary,
+              tooltip: 'Instructions',
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const InstructionsPage(),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 
