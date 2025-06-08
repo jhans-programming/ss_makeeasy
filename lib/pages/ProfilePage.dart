@@ -99,7 +99,7 @@ class ProfilePage extends StatelessWidget {
               ],
             ),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 4),
 
             // Recent Makeups Card
             Container(
@@ -160,7 +160,7 @@ class ProfilePage extends StatelessWidget {
                     ],
                   ),
 
-                  SizedBox(height: 16),
+                  SizedBox(height: 8),
 
                   // 4. The Element (Button)
                   Center(
@@ -185,7 +185,8 @@ class ProfilePage extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 20),
+
+            const SizedBox(height: 8),
 
             // Button to Lippie
             ElevatedButton(
@@ -227,7 +228,7 @@ class ProfilePage extends StatelessWidget {
 
     return SizedBox(
       width: boxWidth,
-      height: 240,
+      height: 120,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
         child: Image.asset(imagePath, fit: BoxFit.cover),

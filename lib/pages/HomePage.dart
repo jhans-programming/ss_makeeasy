@@ -1,12 +1,34 @@
+import 'dart:collection';
 import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mlkit_face_mesh_detection/google_mlkit_face_mesh_detection.dart';
+import 'package:makeeasy/components/HomePage/filter_selector.dart';
 
 import '../components/HomePage/detector_view.dart';
 import '../painters/face_mesh_detector_painter.dart';
 import '../pages/InstructionsPage.dart';
+
+typedef CategoryFilterEntry = DropdownMenuEntry<CategoryFilter>;
+String getCategoryFilterLabel(CategoryFilter cat) =>
+    cat.toString().split(".")[1];
+
+enum CategoryFilter {
+  All,
+  Daily,
+  Party;
+
+  static final List<DropdownMenuEntry<CategoryFilter>> entries =
+      UnmodifiableListView<CategoryFilterEntry>(
+        values.map<CategoryFilterEntry>(
+          (CategoryFilter cat) => CategoryFilterEntry(
+            value: cat,
+            label: getCategoryFilterLabel(cat),
+          ),
+        ),
+      );
+}
 
 class HomePage extends StatefulWidget {
   @override
@@ -22,6 +44,12 @@ class _HomePageState extends State<HomePage> {
   CustomPaint? _customPaint;
   String? _text;
   var _cameraLensDirection = CameraLensDirection.front;
+
+  CategoryFilter selectedCategoryFilter = CategoryFilter.All;
+
+  int selectedCategory = 0;
+  final TextEditingController categoryFilterController =
+      TextEditingController();
 
   @override
   void dispose() {
@@ -43,36 +71,62 @@ class _HomePageState extends State<HomePage> {
         ),
       );
     }
-    return Scaffold(
-      body: Stack(
-        children: [
-          DetectorView(
-            title: 'Face Mesh Detector',
-            customPaint: _customPaint,
-            text: _text,
-            onImage: _processImage,
-            initialCameraLensDirection: _cameraLensDirection,
-            onCameraLensDirectionChanged:
-                (value) => _cameraLensDirection = value,
+
+    return Stack(
+      alignment: Alignment.bottomCenter,
+      children: [
+        // Camera Feed
+        DetectorView(
+          title: 'Face Mesh Detector',
+          customPaint: _customPaint,
+          text: _text,
+          onImage: _processImage,
+          initialCameraLensDirection: _cameraLensDirection,
+          onCameraLensDirectionChanged: (value) => _cameraLensDirection = value,
+        ),
+
+        // Title "Choose your style"
+        Positioned(
+          top: 80,
+          child: Column(
+            children: [
+              Text(
+                "Choose your style",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  shadows: [
+                    Shadow(color: Colors.black.withAlpha(255), blurRadius: 10),
+                  ],
+                ),
+              ),
+
+              SizedBox(height: 8),
+
+              DropdownMenu(
+                dropdownMenuEntries: CategoryFilter.entries,
+                initialSelection: selectedCategoryFilter,
+                textStyle: TextStyle(color: Colors.white),
+                onSelected: (value) {
+                  setState(() {
+                    selectedCategoryFilter = value ?? CategoryFilter.All;
+                  });
+                },
+              ),
+            ],
           ),
-          Positioned(
-            top: 40,
-            right: 20,
-            child: IconButton(
-              icon: Icon(Icons.start, size: 30),
-              color: Theme.of(context).colorScheme.primary,
-              tooltip: 'Instructions',
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const InstructionsPage(),
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
-      ),
+        ),
+
+        // Filter Selector
+        FilterSelector(
+          optionChangeHandler:
+              (page) => setState(() {
+                selectedCategory = page;
+              }),
+          categoryFilter: selectedCategoryFilter,
+        ),
+      ],
     );
   }
 
@@ -92,6 +146,7 @@ class _HomePageState extends State<HomePage> {
         inputImage.metadata!.size,
         inputImage.metadata!.rotation,
         _cameraLensDirection,
+        selectedCategoryFilter == CategoryFilter.Party ? 1 : selectedCategory,
       );
       _customPaint = CustomPaint(painter: painter);
     } else {

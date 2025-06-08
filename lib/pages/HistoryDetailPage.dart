@@ -22,8 +22,8 @@ class HistoryDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-    String? _title;
-    String? _desc;
+    String? _title = title;
+    String? _desc = description;
 
     return Consumer<UserHistoryNotifier>(
       builder: (context, value, child) {
@@ -58,126 +58,130 @@ class HistoryDetailPage extends StatelessWidget {
             ],
           ),
 
-          body: Padding(
-            padding: const EdgeInsets.all(32),
-            child: Card(
-              elevation: 2,
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Row(
-                        children: [
-                          ClipOval(
-                            child: Image(
-                              image: const AssetImage(
-                                'assets/images/profile.jpg',
-                              ), // Use your asset image
-                              width: 150,
-                              height: 150,
-                              fit: BoxFit.cover, // Important: Use BoxFit.cover
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Card(
+                elevation: 2,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Row(
+                          children: [
+                            ClipOval(
+                              child: Image(
+                                image: const AssetImage(
+                                  'assets/images/profile.jpg',
+                                ), // Use your asset image
+                                width: 150,
+                                height: 150,
+                                fit:
+                                    BoxFit.cover, // Important: Use BoxFit.cover
+                              ),
                             ),
-                          ),
 
-                          SizedBox(width: 24),
+                            SizedBox(width: 24),
 
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Title",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w900,
-                                    color:
-                                        Theme.of(context).colorScheme.secondary,
-                                  ),
-                                ),
-                                TextFormField(
-                                  decoration: InputDecoration(
-                                    hintText: "Enter a title",
-                                    hintStyle: TextStyle(
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.onSurface.withAlpha(50),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Title",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w900,
+                                      color:
+                                          Theme.of(
+                                            context,
+                                          ).colorScheme.secondary,
                                     ),
-                                    fillColor:
-                                        Theme.of(
+                                  ),
+                                  TextFormField(
+                                    initialValue: title,
+                                    decoration: InputDecoration(
+                                      hintText: "Enter a title",
+                                      hintStyle: TextStyle(
+                                        color: Theme.of(
                                           context,
-                                        ).colorScheme.surfaceDim,
-                                    filled: true,
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(16),
-                                      borderSide: BorderSide.none,
+                                        ).colorScheme.onSurface.withAlpha(50),
+                                      ),
+                                      fillColor:
+                                          Theme.of(
+                                            context,
+                                          ).colorScheme.surfaceDim,
+                                      filled: true,
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(16),
+                                        borderSide: BorderSide.none,
+                                      ),
                                     ),
+
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Please enter a title';
+                                      }
+                                      return null;
+                                    },
+
+                                    onSaved: (value) {
+                                      _title = value;
+                                    },
                                   ),
 
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Please enter a title';
-                                    }
-                                    return null;
-                                  },
+                                  SizedBox(height: 8),
 
-                                  onSaved: (value) {
-                                    _title = value;
-                                  },
-                                ),
-
-                                SizedBox(height: 8),
-
-                                Text(
-                                  "Saved on $date", //the date is not editable
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.grey,
+                                  Text(
+                                    "Saved on $date", //the date is not editable
+                                    style: const TextStyle(color: Colors.grey),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        SizedBox(height: 16),
+
+                        Text(
+                          "Description",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w900,
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
+                        ),
+                        TextFormField(
+                          initialValue: description,
+                          maxLines: 10,
+                          decoration: InputDecoration(
+                            hintText: "Enter a description",
+                            hintStyle: TextStyle(
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onSurface.withAlpha(50),
+                            ),
+                            fillColor: Theme.of(context).colorScheme.surfaceDim,
+                            filled: true,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(16),
+                              borderSide: BorderSide.none,
                             ),
                           ),
-                        ],
-                      ),
 
-                      SizedBox(height: 16),
+                          validator: (value) {
+                            return null;
+                          },
 
-                      Text(
-                        "Description",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w900,
-                          color: Theme.of(context).colorScheme.secondary,
+                          onSaved: (value) {
+                            _desc = value;
+                          },
                         ),
-                      ),
-                      TextFormField(
-                        maxLines: 10,
-                        decoration: InputDecoration(
-                          hintText: "Enter a description",
-                          hintStyle: TextStyle(
-                            color: Theme.of(
-                              context,
-                            ).colorScheme.onSurface.withAlpha(50),
-                          ),
-                          fillColor: Theme.of(context).colorScheme.surfaceDim,
-                          filled: true,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(16),
-                            borderSide: BorderSide.none,
-                          ),
-                        ),
-
-                        validator: (value) {
-                          return null;
-                        },
-
-                        onSaved: (value) {
-                          _desc = value;
-                        },
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
