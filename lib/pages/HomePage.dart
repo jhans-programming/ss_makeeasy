@@ -8,6 +8,7 @@ import 'package:makeeasy/components/HomePage/filter_selector.dart';
 
 import '../components/HomePage/detector_view.dart';
 import '../painters/face_mesh_detector_painter.dart';
+import '../pages/InstructionsPage.dart';
 
 typedef CategoryFilterEntry = DropdownMenuEntry<CategoryFilter>;
 String getCategoryFilterLabel(CategoryFilter cat) =>
@@ -70,6 +71,7 @@ class _HomePageState extends State<HomePage> {
         ),
       );
     }
+
     return Stack(
       alignment: Alignment.bottomCenter,
       children: [

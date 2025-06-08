@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:makeeasy/utils/appStyle.dart';
-import 'package:makeeasy/main.dart'; // assuming `themeNotifier` is defined there
+import 'package:makeeasy/main.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -28,8 +28,16 @@ class SettingsPage extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            _buildSettingsItem(context, Icons.email, "Change email"),
-            _buildSettingsItem(context, Icons.lock, "Change password"),
+            _buildSettingsItem(
+              context,
+              Icons.email,
+              "Change email",
+            ), // Email feature button here
+            _buildSettingsItem(
+              context,
+              Icons.lock,
+              "Change password",
+            ), // Password feature button here
             _buildSettingsItem(
               context,
               Icons.color_lens,
@@ -139,7 +147,7 @@ void _showFAQDialog(BuildContext context) {
                         "Q: How do I contact support?",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
-                      Text("A: Email us at support@example.com."),
+                      Text("A: Email us at mjeffhans@gmail.com."),
                       SizedBox(height: 15),
                       Text(
                         "Q: Is dark mode available?",
@@ -219,7 +227,7 @@ void _showPrivacyDialog(BuildContext context) {
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       Text(
-                        "For questions regarding our privacy policy, contact privacy@makeeasy.com.",
+                        "For questions regarding our privacy policy, contact mjeffhans@gmail.com.",
                       ),
                     ],
                   ),
