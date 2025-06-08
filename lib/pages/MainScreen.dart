@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:makeeasy/pages/FavouritesPage.dart';
 import 'package:makeeasy/pages/HomePage.dart';
+import 'package:makeeasy/pages/InstructionsPage.dart';
 import 'package:makeeasy/pages/RegisterPage.dart';
 import 'package:makeeasy/pages/ProfilePage.dart';
 
@@ -18,6 +19,7 @@ class _MainScreenState extends State<MainScreen> {
   final List<Widget> _pages = <Widget>[
     FavouritesPage(),
     HomePage(),
+    // InstructionsPage(),
     ProfilePage(),
   ];
 
