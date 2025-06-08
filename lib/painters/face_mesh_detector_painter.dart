@@ -15,12 +15,14 @@ class FaceMeshDetectorPainter extends CustomPainter {
     this.imageSize,
     this.rotation,
     this.cameraLensDirection,
+    this.categoryIdx,
   );
 
   final List<FaceMesh> meshes;
   final Size imageSize;
   final InputImageRotation rotation;
   final CameraLensDirection cameraLensDirection;
+  final int categoryIdx;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -106,69 +108,6 @@ class FaceMeshDetectorPainter extends CustomPainter {
     }
 
     for (final FaceMesh mesh in meshes) {
-      void drawLeftEyeBrow() {}
-
-      void drawLowerLip() {
-        final path = Path();
-
-        final lowerLipBottom =
-            mesh.contours[FaceMeshContourType.lowerLipBottom];
-        final lowerLipTop = mesh.contours[FaceMeshContourType.lowerLipTop];
-
-        final firstPoint = lowerLipTop![0];
-        path.moveTo(
-          translateX(
-            firstPoint.x,
-            size,
-            imageSize,
-            rotation,
-            cameraLensDirection,
-          ),
-          translateY(
-            firstPoint.y,
-            size,
-            imageSize,
-            rotation,
-            cameraLensDirection,
-          ),
-        );
-
-        for (int i = 1; i < lowerLipTop.length; i++) {
-          final fmp = lowerLipTop[i];
-          path.lineTo(
-            translateX(fmp.x, size, imageSize, rotation, cameraLensDirection),
-            translateY(fmp.y, size, imageSize, rotation, cameraLensDirection),
-          );
-        }
-
-        for (int i = 0; i < lowerLipBottom!.reversed.length; i++) {
-          final fmp = lowerLipBottom.reversed.toList()[i];
-          path.lineTo(
-            translateX(fmp.x, size, imageSize, rotation, cameraLensDirection),
-            translateY(fmp.y, size, imageSize, rotation, cameraLensDirection),
-          );
-        }
-
-        path.close();
-
-        canvas.drawPath(path, lipsPaint);
-      }
-
-      void drawUpperLip() {
-        // final path = Path();
-
-        // final leftEyebrowBottom =
-        //     mesh.contours[FaceMeshContourType.upperLipBottom];
-        final upperLipTop = mesh.contours[FaceMeshContourType.upperLipTop];
-        print(
-          "-------------------------------------------------------------------",
-        );
-        for (final fmp in upperLipTop!) print(fmp.index);
-        print(
-          "-------------------------------------------------------------------",
-        );
-      }
-
       // drawLeftEyeBrow();
       // drawRightEyeBrow();
       // drawLowerLip();
@@ -201,12 +140,14 @@ class FaceMeshDetectorPainter extends CustomPainter {
       //   drawText(canvas, offset.translate(1, 1), i.toString());
       // }
 
-      // drawLeftEyeBrow();
+      MakeupCategory selectedCategory =
+          categoryIdx == 0
+              ? MakeupCategory.Category1
+              : MakeupCategory.Category2;
+
       Map<FacePart, dynamic> facePartColors = getFacePartColors(
-        // makeupChoices[MakeupCategory.Category2]![0],
-        // MakeupCategory.Category2,
-        makeupChoices[MakeupCategory.Category1]![0],
-        MakeupCategory.Category1,
+        makeupChoices[selectedCategory]![0],
+        selectedCategory,
       );
       //? Eyebrows
       drawFacePart(facePartColors[FacePart.LeftEyebrow], mesh);
