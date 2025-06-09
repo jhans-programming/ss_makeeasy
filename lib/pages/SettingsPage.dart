@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:makeeasy/utils/appStyle.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:makeeasy/main.dart'; // assuming `themeNotifier` is defined there
+import 'package:makeeasy/main.dart';
+import 'package:makeeasy/pages/RegisterPage.dart';
+import 'package:makeeasy/pages/MainScreen.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -30,13 +33,49 @@ class SettingsPage extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            _buildSettingsItem(context, Icons.email, "Change email"),
-            _buildSettingsItem(context, Icons.lock, "Change password"),
             _buildSettingsItem(
               context,
-              Icons.color_lens,
-              "Theme",
-              onTap: () => _toggleTheme(context),
+              Icons.email,
+              "Change email",
+            ), // Email feature button here
+            _buildSettingsItem(
+              context,
+              Icons.lock,
+              "Change password",
+            ), // Password feature button here
+            Card(
+              elevation: 1,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: ListTile(
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
+                leading: Icon(
+                  Icons.color_lens,
+                  size: 30,
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
+                title: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Theme",
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      "Current Theme: ${_getThemeName(themeNotifier.value)}",
+                      style: const TextStyle(color: Colors.grey, fontSize: 12),
+                    ),
+                  ],
+                ),
+                onTap: () => _toggleTheme(context),
+              ),
             ),
 
             _buildSettingsItem(
@@ -142,6 +181,7 @@ void _showFAQDialog(BuildContext context) {
                         "Q: How do I contact support?",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
+
                       Text("A: Email us at support@example.com."),
                       SizedBox(height: 15),
                       Text(
@@ -251,6 +291,65 @@ void _toggleTheme(BuildContext context) {
   } else {
     // If system, toggle to light as a default
     themeNotifier.value = ThemeMode.light;
+  }
+
+  // Optional: show feedback
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(
+        'Switched to ${themeNotifier.value == ThemeMode.dark ? "Dark" : "Light"} Mode',
+      ),
+      duration: const Duration(seconds: 1),
+    ),
+  );
+}
+
+void _showLogoutDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: const Text("Confirm Logout"),
+        content: const Text("Are you sure you want to log out?"),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(), // Close the dialog
+            child: const Text("Cancel"),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.secondary,
+            ),
+            onPressed: () {
+              Navigator.of(context).pop(); // Close the dialog
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder:
+                      (context) => const MainScreen(
+                        // Navigate to MainScreen
+                        key: Key('main_screen'),
+                      ),
+                ),
+              );
+            },
+            child: const Text("Yes", style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+String _getThemeName(ThemeMode mode) {
+  switch (mode) {
+    case ThemeMode.dark:
+      return "Dark";
+    case ThemeMode.light:
+      return "Light";
+    case ThemeMode.system:
+    default:
+      return "System";
   }
 
   // Optional: show feedback

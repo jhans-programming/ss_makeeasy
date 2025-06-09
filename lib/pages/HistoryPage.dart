@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:makeeasy/models/user_history.dart';
 import 'package:makeeasy/pages/HistoryDetailPage.dart';
 import 'package:makeeasy/pages/HomePage.dart';
@@ -109,7 +110,7 @@ class _HistoryPageState extends State<HistoryPage> {
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
             child: Row(
               children: [
                 const CircleAvatar(
@@ -128,12 +129,12 @@ class _HistoryPageState extends State<HistoryPage> {
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Theme.of(context).colorScheme.secondary,
-                          fontSize: 16,
+                          // fontSize: 16,
                         ),
                       ),
-                      const SizedBox(height: 4),
+
                       Text(truncated, style: const TextStyle(fontSize: 14)),
-                      const SizedBox(height: 4),
+
                       Text(
                         'saved on $date',
                         style: const TextStyle(
@@ -183,7 +184,7 @@ class _HistoryPageState extends State<HistoryPage> {
             children: [
               SafeArea(
                 child: Padding(
-                  padding: const EdgeInsets.all(32.0),
+                  padding: const EdgeInsets.all(8.0),
                   child: Card(
                     elevation: 2,
                     shape: RoundedRectangleBorder(
@@ -215,18 +216,27 @@ class _HistoryPageState extends State<HistoryPage> {
                                 ],
                               ),
                             )
-                            : ListView(
-                              children:
-                                  value.userHistory!
-                                      .map(
-                                        (entry) => buildHistoryListItem(
-                                          context,
-                                          entry.title,
-                                          entry.date,
-                                          entry.description,
-                                        ),
-                                      )
-                                      .toList(),
+                            : AnimationLimiter(
+                              child: ListView.builder(
+                                itemCount: value.userHistory!.length,
+                                itemBuilder: (context, index) {
+                                  final entry = value.userHistory![index];
+                                  return AnimationConfiguration.staggeredList(
+                                    position: index,
+                                    duration: const Duration(milliseconds: 250),
+                                    child: SlideAnimation(
+                                      verticalOffset: 0.0,
+                                      horizontalOffset: 50.0,
+                                      child: buildHistoryListItem(
+                                        context,
+                                        entry.title,
+                                        entry.date,
+                                        entry.description,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
                             ),
                   ),
                 ),

@@ -22,7 +22,8 @@ dependencies:
   firebase_core: ^2.10.0
   firebase_auth: ^4.7.0
   cloud_firestore: ^4.5.0
-
+  tutorial_coach_mark: ^1.3.0
+  flutter_staggered_animations: ^1.1.1
 
 dev_dependencies:
   flutter_test:
@@ -45,3 +46,5 @@ flutter:
     - assets/images/lippie_logo.png
     - assets/images/dummylook1.jpg
     - assets/images/profile.jpg
+    - assets/images/daily.png
+    - assets/images/party.png
