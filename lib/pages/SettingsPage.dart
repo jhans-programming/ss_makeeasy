@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:makeeasy/utils/appStyle.dart';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:makeeasy/main.dart';
 import 'package:makeeasy/pages/RegisterPage.dart';
 import 'package:makeeasy/pages/MainScreen.dart';
@@ -90,8 +93,10 @@ class SettingsPage extends StatelessWidget {
             ),
             const Spacer(),
             ElevatedButton(
-              onPressed: () => _showLogoutDialog(context),
-
+              onPressed: () async {
+                await FirebaseAuth.instance.signOut();
+                // AuthGate will detect sign-out and show RegisterPage again
+                },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Theme.of(context).colorScheme.secondary,
                 shape: RoundedRectangleBorder(
@@ -176,7 +181,8 @@ void _showFAQDialog(BuildContext context) {
                         "Q: How do I contact support?",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
-                      Text("A: Email us at mjeffhans@gmail.com."),
+
+                      Text("A: Email us at support@example.com."),
                       SizedBox(height: 15),
                       Text(
                         "Q: Is dark mode available?",
@@ -256,7 +262,7 @@ void _showPrivacyDialog(BuildContext context) {
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       Text(
-                        "For questions regarding our privacy policy, contact mjeffhans@gmail.com.",
+                        "For questions regarding our privacy policy, contact privacy@makeeasy.com.",
                       ),
                     ],
                   ),
@@ -345,4 +351,14 @@ String _getThemeName(ThemeMode mode) {
     default:
       return "System";
   }
+
+  // Optional: show feedback
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(
+        'Switched to ${themeNotifier.value == ThemeMode.dark ? "Dark" : "Light"} Mode',
+      ),
+      duration: const Duration(seconds: 1),
+    ),
+  );
 }

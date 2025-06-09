@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "629688799047",
+    "project_id": "ss-makeeasy",
+    "storage_bucket": "ss-makeeasy.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:629688799047:android:a8034c75e822be87cdc662",
+        "android_client_info": {
+          "package_name": "com.example.makeeasy"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCKuXF85LTkbYkRtjzIIUGAwILJabEM65Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

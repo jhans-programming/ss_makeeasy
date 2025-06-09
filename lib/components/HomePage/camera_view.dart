@@ -18,6 +18,7 @@ class CameraView extends StatefulWidget {
     this.initialCameraLensDirection = CameraLensDirection.back,
   }) : super(key: key);
 
+
   final bool enableTakePicture;
   final CustomPaint? customPaint;
   final Function(InputImage inputImage) onImage;
@@ -139,7 +140,7 @@ class _CameraViewState extends State<CameraView> {
       ),
     );
   }
-
+  
   Future _startLiveFeed() async {
     final camera = _cameras[_cameraIndex];
     _controller = CameraController(
@@ -156,7 +157,7 @@ class _CameraViewState extends State<CameraView> {
       if (!mounted) {
         return;
       }
-
+      
       _controller?.startImageStream(_processCameraImage).then((value) {
         if (widget.onCameraFeedReady != null) {
           widget.onCameraFeedReady!();

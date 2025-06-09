@@ -149,7 +149,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         ),
       );
     }
-
+    
     return Stack(
       alignment: Alignment.bottomCenter,
       children: [
