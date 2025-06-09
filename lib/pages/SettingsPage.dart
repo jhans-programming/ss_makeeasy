@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:makeeasy/utils/appStyle.dart';
 import 'package:makeeasy/main.dart';
+import 'package:makeeasy/pages/RegisterPage.dart';
+import 'package:makeeasy/pages/MainScreen.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -38,11 +40,39 @@ class SettingsPage extends StatelessWidget {
               Icons.lock,
               "Change password",
             ), // Password feature button here
-            _buildSettingsItem(
-              context,
-              Icons.color_lens,
-              "Theme",
-              onTap: () => _toggleTheme(context),
+            Card(
+              elevation: 1,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: ListTile(
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
+                leading: Icon(
+                  Icons.color_lens,
+                  size: 30,
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
+                title: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Theme",
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      "Current Theme: ${_getThemeName(themeNotifier.value)}",
+                      style: const TextStyle(color: Colors.grey, fontSize: 12),
+                    ),
+                  ],
+                ),
+                onTap: () => _toggleTheme(context),
+              ),
             ),
 
             _buildSettingsItem(
@@ -60,9 +90,8 @@ class SettingsPage extends StatelessWidget {
             ),
             const Spacer(),
             ElevatedButton(
-              onPressed: () {
-                // Add logout functionality here
-              },
+              onPressed: () => _showLogoutDialog(context),
+
               style: ElevatedButton.styleFrom(
                 backgroundColor: Theme.of(context).colorScheme.secondary,
                 shape: RoundedRectangleBorder(
@@ -267,4 +296,53 @@ void _toggleTheme(BuildContext context) {
       duration: const Duration(seconds: 1),
     ),
   );
+}
+
+void _showLogoutDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: const Text("Confirm Logout"),
+        content: const Text("Are you sure you want to log out?"),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(), // Close the dialog
+            child: const Text("Cancel"),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.secondary,
+            ),
+            onPressed: () {
+              Navigator.of(context).pop(); // Close the dialog
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder:
+                      (context) => const MainScreen(
+                        // Navigate to MainScreen
+                        key: Key('main_screen'),
+                      ),
+                ),
+              );
+            },
+            child: const Text("Yes", style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+String _getThemeName(ThemeMode mode) {
+  switch (mode) {
+    case ThemeMode.dark:
+      return "Dark";
+    case ThemeMode.light:
+      return "Light";
+    case ThemeMode.system:
+    default:
+      return "System";
+  }
 }
