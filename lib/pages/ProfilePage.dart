@@ -97,6 +97,7 @@ class ProfilePage extends StatelessWidget {
                       fontSize: 25,
                       fontWeight: FontWeight.bold,
                     ),
+
                   ),
                 ],
               ),
@@ -230,7 +231,7 @@ class ProfilePage extends StatelessWidget {
 
     return SizedBox(
       width: boxWidth,
-      height: 240,
+      height: 120,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
         child: Image.asset(imagePath, fit: BoxFit.cover),
