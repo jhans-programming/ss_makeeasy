@@ -96,7 +96,7 @@ class SettingsPage extends StatelessWidget {
               onPressed: () async {
                 await FirebaseAuth.instance.signOut();
                 // AuthGate will detect sign-out and show RegisterPage again
-                },
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Theme.of(context).colorScheme.secondary,
                 shape: RoundedRectangleBorder(
@@ -351,14 +351,4 @@ String _getThemeName(ThemeMode mode) {
     default:
       return "System";
   }
-
-  // Optional: show feedback
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      content: Text(
-        'Switched to ${themeNotifier.value == ThemeMode.dark ? "Dark" : "Light"} Mode',
-      ),
-      duration: const Duration(seconds: 1),
-    ),
-  );
 }

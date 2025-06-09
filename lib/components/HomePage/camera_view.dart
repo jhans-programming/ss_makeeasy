@@ -12,13 +12,14 @@ class CameraView extends StatefulWidget {
     required this.customPaint,
     required this.onImage,
     required this.enableTakePicture,
+    this.onConfirmSelfie,
     this.onCameraFeedReady,
     this.onDetectorViewModeChanged,
     this.onCameraLensDirectionChanged,
     this.initialCameraLensDirection = CameraLensDirection.back,
   }) : super(key: key);
 
-
+  final Function? onConfirmSelfie;
   final bool enableTakePicture;
   final CustomPaint? customPaint;
   final Function(InputImage inputImage) onImage;
@@ -97,8 +98,9 @@ class _CameraViewState extends State<CameraView> {
                             ),
                           ),
                           ElevatedButton(
-                            onPressed: () {
+                            onPressed: () async {
                               //! Call callback function for saving file to storage
+                              widget.onConfirmSelfie!(image);
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor:
@@ -140,7 +142,7 @@ class _CameraViewState extends State<CameraView> {
       ),
     );
   }
-  
+
   Future _startLiveFeed() async {
     final camera = _cameras[_cameraIndex];
     _controller = CameraController(
@@ -157,7 +159,7 @@ class _CameraViewState extends State<CameraView> {
       if (!mounted) {
         return;
       }
-      
+
       _controller?.startImageStream(_processCameraImage).then((value) {
         if (widget.onCameraFeedReady != null) {
           widget.onCameraFeedReady!();

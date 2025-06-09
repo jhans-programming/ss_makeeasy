@@ -347,6 +347,8 @@ class _InstructionsPageState extends State<InstructionsPage> {
     ];
   }
 
+  void _confirmSelfie(XFile imagefile) {}
+
   @override
   Widget build(BuildContext context) {
     // The current step
@@ -363,6 +365,7 @@ class _InstructionsPageState extends State<InstructionsPage> {
             onImage: _processImage,
             customPaint: _customPaint,
             enableTakePicture: currentStep == stepsCount,
+            onConfirmSelfie: _confirmSelfie,
             text: _text,
             initialCameraLensDirection: _cameraLensDirection,
             onCameraLensDirectionChanged: (value) => _cameraLensDirection,
