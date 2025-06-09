@@ -157,6 +157,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         DetectorView(
           title: 'Face Mesh Detector',
           customPaint: _customPaint,
+          enableTakePicture: false,
           text: _text,
           onImage: _processImage,
           initialCameraLensDirection: _cameraLensDirection,

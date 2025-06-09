@@ -158,14 +158,7 @@ class _InstructionsPageState extends State<InstructionsPage> {
                     stepsData[widget.selectedCategory].length - 1)
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return ResultSelfiePage();
-                          },
-                        ),
-                      );
+                      currentStep++;
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Theme.of(context).colorScheme.primary,
@@ -312,10 +305,54 @@ class _InstructionsPageState extends State<InstructionsPage> {
     ];
   }
 
+  List<Widget> _buildSelfieUI() {
+    return [
+      Positioned(
+        top: 40,
+        left: 10,
+        right: 10,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Text(
+              "Take a Selfie!",
+              style: TextStyle(
+                fontSize: 21,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                shadows: [Shadow(blurRadius: 10.0, color: Colors.black)],
+              ),
+            ),
+            // Center Step Info
+            // Row for Close and Done Buttons
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // Close Button
+                IconButton(
+                  icon: Icon(
+                    Icons.arrow_back,
+                    size: 30,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                  onPressed: () {
+                    currentStep--;
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     // The current step
     // final stepData = stepsData[][currentStep];
+
+    int stepsCount = stepsData[widget.selectedCategory].length;
 
     return Scaffold(
       body: Stack(
@@ -325,12 +362,14 @@ class _InstructionsPageState extends State<InstructionsPage> {
             title: 'Face Mesh Detector',
             onImage: _processImage,
             customPaint: _customPaint,
+            enableTakePicture: currentStep == stepsCount,
             text: _text,
             initialCameraLensDirection: _cameraLensDirection,
             onCameraLensDirectionChanged: (value) => _cameraLensDirection,
           ),
 
-          ..._buildInstructionsUI(),
+          if (currentStep < stepsCount) ..._buildInstructionsUI(),
+          if (currentStep == stepsCount) ..._buildSelfieUI(),
         ],
       ),
     );
@@ -346,7 +385,8 @@ class _InstructionsPageState extends State<InstructionsPage> {
 
     final meshes = await _meshDetector.processImage(inputImage);
     if (inputImage.metadata?.size != null &&
-        inputImage.metadata?.rotation != null) {
+        inputImage.metadata?.rotation != null &&
+        currentStep < stepsData[widget.selectedCategory].length) {
       final painter = InstructionsPainter(
         meshes,
         inputImage.metadata!.size,
