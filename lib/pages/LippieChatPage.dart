@@ -38,7 +38,7 @@ class _LippieChatPageState extends State<LippieChatPage> {
     _controller.clear();
 
     //because it runs locally, we need to change the URL based on the server
-    final url = Uri.parse('http://localhost:11434/api/chat');
+    final url = Uri.parse('http://172.20.10.3:11434/api/chat');
     final headers = {
       'Content-Type': 'application/json',
     };
@@ -152,7 +152,7 @@ class _LippieChatPageState extends State<LippieChatPage> {
                 builder: (BuildContext context) {
                   return AlertDialog(
                     title: Text('Clear Chat?'),
-                    content: Text('Are you sure you want to delete all messages?'),
+                    content: Text('Are you sure you want to clear all messages?'),
                     actions: [
                       TextButton(
                         child: Text('Cancel'),
