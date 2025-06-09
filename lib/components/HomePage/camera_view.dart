@@ -75,7 +75,45 @@ class _CameraViewState extends State<CameraView> {
               bottom: 128,
               left: 10,
               right: 10,
-              child: ShutterButton(onPressed: () async {}),
+              child: ShutterButton(
+                onPressed: () async {
+                  final image = await _controller!.takePicture();
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        content: Image.file(File(image.path)),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text(
+                              "Retake",
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.secondary,
+                              ),
+                            ),
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              //! Call callback function for saving file to storage
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.secondary,
+                            ),
+                            child: Text(
+                              "Use",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+              ),
             ),
         ],
       ),
