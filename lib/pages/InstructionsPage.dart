@@ -2,9 +2,11 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mlkit_face_mesh_detection/google_mlkit_face_mesh_detection.dart';
 import 'package:makeeasy/components/HomePage/detector_view.dart';
+import 'package:makeeasy/pages/LippieChatPage.dart';
 import 'package:makeeasy/pages/ResultSelfiePage.dart';
 import 'package:makeeasy/painters/instructions_painter.dart';
 import 'package:makeeasy/utils/face_guidelines.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 
 class InstructionsPage extends StatefulWidget {
   const InstructionsPage({super.key, required this.selectedCategory});
@@ -17,6 +19,30 @@ class InstructionsPage extends StatefulWidget {
 
 class _InstructionsPageState extends State<InstructionsPage> {
   int currentStep = 0;
+  // Text-to-Speech related
+  final FlutterTts _flutterTts = FlutterTts();
+
+  @override
+  void initState() {
+    super.initState();
+    _flutterTts.setLanguage('en-US'); // Set language to English (US)
+    _flutterTts.setPitch(2.0); // Optional: adjust pitch
+    _flutterTts.setSpeechRate(0.5); // Optional: adjust speaking speed
+
+    //_setFemaleVoice();
+  }
+
+  void _speakInstruction() {
+    final stepText =
+        stepsData[widget.selectedCategory][currentStep]['application'];
+    if (stepText != null) {
+      _flutterTts.speak(stepText);
+    }
+  }
+
+  // Scroll - Button related
+  final DraggableScrollableController _sheetController =
+      DraggableScrollableController();
 
   // Camera feed related
   final FaceMeshDetector _meshDetector = FaceMeshDetector(
@@ -64,6 +90,7 @@ class _InstructionsPageState extends State<InstructionsPage> {
 
   @override
   void dispose() {
+    _flutterTts.stop(); // Stop any ongoing speech
     _canProcess = false;
     _meshDetector.close();
     super.dispose();
@@ -200,7 +227,13 @@ class _InstructionsPageState extends State<InstructionsPage> {
                   Icons.note_alt,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  _sheetController.animateTo(
+                    0.5, // This should match `maxChildSize`
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeInOut,
+                  );
+                },
               ),
             ),
             const SizedBox(height: 10),
@@ -214,7 +247,7 @@ class _InstructionsPageState extends State<InstructionsPage> {
                   Icons.volume_up_rounded,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                onPressed: () {},
+                onPressed: _speakInstruction,
               ),
             ),
             const SizedBox(height: 450),
@@ -224,7 +257,14 @@ class _InstructionsPageState extends State<InstructionsPage> {
                 height: 40, // adjust size as needed
                 width: 40,
               ),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => LippieChatPage(),
+                  ),
+                );
+              },
             ),
           ],
         ),
@@ -260,6 +300,7 @@ class _InstructionsPageState extends State<InstructionsPage> {
 
       // Bottom draggable sheet
       DraggableScrollableSheet(
+        controller: _sheetController,
         initialChildSize: 0.1,
         minChildSize: 0.1,
         maxChildSize: 0.5,
@@ -312,10 +353,56 @@ class _InstructionsPageState extends State<InstructionsPage> {
     ];
   }
 
+  List<Widget> _buildSelfieUI() {
+    return [
+      Positioned(
+        top: 40,
+        left: 10,
+        right: 10,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Text(
+              "Take a Selfie!",
+              style: TextStyle(
+                fontSize: 21,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                shadows: [Shadow(blurRadius: 10.0, color: Colors.black)],
+              ),
+            ),
+            // Center Step Info
+            // Row for Close and Done Buttons
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // Close Button
+                IconButton(
+                  icon: Icon(
+                    Icons.arrow_back,
+                    size: 30,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                  onPressed: () {
+                    currentStep--;
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    ];
+  }
+
+  void _confirmSelfie(XFile imagefile) {}
+
   @override
   Widget build(BuildContext context) {
     // The current step
     // final stepData = stepsData[][currentStep];
+
+    int stepsCount = stepsData[widget.selectedCategory].length;
 
     return Scaffold(
       body: Stack(
@@ -325,12 +412,15 @@ class _InstructionsPageState extends State<InstructionsPage> {
             title: 'Face Mesh Detector',
             onImage: _processImage,
             customPaint: _customPaint,
+            enableTakePicture: currentStep == stepsCount,
+            onConfirmSelfie: _confirmSelfie,
             text: _text,
             initialCameraLensDirection: _cameraLensDirection,
             onCameraLensDirectionChanged: (value) => _cameraLensDirection,
           ),
 
-          ..._buildInstructionsUI(),
+          if (currentStep < stepsCount) ..._buildInstructionsUI(),
+          if (currentStep == stepsCount) ..._buildSelfieUI(),
         ],
       ),
     );
@@ -346,7 +436,8 @@ class _InstructionsPageState extends State<InstructionsPage> {
 
     final meshes = await _meshDetector.processImage(inputImage);
     if (inputImage.metadata?.size != null &&
-        inputImage.metadata?.rotation != null) {
+        inputImage.metadata?.rotation != null &&
+        currentStep < stepsData[widget.selectedCategory].length) {
       final painter = InstructionsPainter(
         meshes,
         inputImage.metadata!.size,

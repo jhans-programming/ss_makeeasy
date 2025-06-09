@@ -7,6 +7,8 @@ enum FacePart {
   RightEyebrow,
   LeftTopEyelid,
   RightTopEyelid,
+  LeftEyeliner,
+  RightEyeliner,
   LeftBottomEyelid,
   RightBottomEyelid,
   LeftCheek,
@@ -25,6 +27,8 @@ Map<FacePart, List<Tuple2<List<int>, Color>>> getFacePartColors(
   MaterialColor rightEyebrowColor = facePartColors[FacePart.RightEyebrow]!;
   MaterialColor leftTopEyelidColor = facePartColors[FacePart.LeftTopEyelid]!;
   MaterialColor rightTopEyelidColor = facePartColors[FacePart.RightTopEyelid]!;
+  MaterialColor leftEyelinerColor = facePartColors[FacePart.LeftEyeliner]!;
+  MaterialColor rightEyelinerColor = facePartColors[FacePart.RightEyeliner]!;
   MaterialColor leftBottomEyelidColor =
       facePartColors[FacePart.LeftBottomEyelid]!;
   MaterialColor rightBottomEyelidColor =
@@ -37,6 +41,58 @@ Map<FacePart, List<Tuple2<List<int>, Color>>> getFacePartColors(
   MaterialColor bottomLipColor = facePartColors[FacePart.BottomLip]!;
 
   return {
+    // FacePart.LeftEyeliner: [
+    //   Tuple2(
+    //     [
+    //       359,
+    //       263,
+    //       263,
+    //       466,
+    //       466,
+    //       388,
+    //       388,
+    //       387,
+    //       387,
+    //       386,
+    //       386,
+    //       385,
+    //       385,
+    //       384,
+    //       384,
+    //       398,
+    //     ],
+    //     leftEyelinerColor.withAlpha(
+    //       selectedCategory == MakeupCategory.Category1 ? 0 : 120,
+    //     ),
+    //   ),
+    // ],
+    // FacePart.RightEyeliner: [
+    //   Tuple2(
+    //     [
+    //       130,
+    //       33,
+    //       33,
+    //       246,
+    //       246,
+    //       161,
+    //       161,
+    //       160,
+    //       160,
+    //       159,
+    //       159,
+    //       158,
+    //       158,
+    //       157,
+    //       157,
+    //       173,
+    //       //guide
+    //       //234, 93, 93, 132, 132, 215, 213, 213, 147, 147, 137, 137, 234,
+    //     ],
+    //     rightEyelinerColor.withAlpha(
+    //       selectedCategory == MakeupCategory.Category1 ? 0 : 120,
+    //     ),
+    //   ),
+    // ],
     FacePart.LeftEyebrow: [
       // Left to Right
       // shade 400 ke atas makin terang
@@ -274,6 +330,7 @@ Map<FacePart, List<Tuple2<List<int>, Color>>> getFacePartColors(
         ),
       ),
     ],
+
     FacePart.RightTopEyelid: [
       // Right to Left
       Tuple2(
@@ -678,11 +735,11 @@ Map<FacePart, List<Tuple2<List<int>, Color>>> getFacePartColors(
       Tuple2([266, 371, 426], leftCheekColor.withAlpha(0)),
 
       //extra left part
-      Tuple2([389, 264, 368], rightCheekColor.withAlpha(20)),
-      Tuple2([389, 264, 356], rightCheekColor.withAlpha(20)),
-      Tuple2([447, 264, 356], rightCheekColor.withAlpha(20)),
-      Tuple2([447, 356, 454], rightCheekColor.withAlpha(20)),
-      Tuple2([454, 366, 447], rightCheekColor.withAlpha(20)),
+      Tuple2([389, 264, 368], leftCheekColor.withAlpha(20)),
+      Tuple2([389, 264, 356], leftCheekColor.withAlpha(20)),
+      Tuple2([447, 264, 356], leftCheekColor.withAlpha(20)),
+      Tuple2([447, 356, 454], leftCheekColor.withAlpha(20)),
+      Tuple2([454, 366, 447], leftCheekColor.withAlpha(20)),
     ],
     FacePart.RightCheek: [
       //upper right cheek from eye

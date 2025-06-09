@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'firebase_options.dart';
 import 'package:makeeasy/states/favorites_notifier.dart';
 import 'package:makeeasy/states/history_notifier.dart';
 import 'package:provider/provider.dart';
 
 import 'package:makeeasy/pages/MainScreen.dart';
 
-final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.system);
+final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.light);
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(
     MultiProvider(
       providers: [
@@ -17,7 +20,11 @@ void main() {
           create: (_) => UserHistoryNotifier(),
         ),
         ChangeNotifierProvider<FavoriteFiltersNotifier>(
-          create: (_) => FavoriteFiltersNotifier(),
+          create: (_) {
+            final user = FirebaseAuth.instance.currentUser;
+            final uid = user?.uid ?? '';
+            return FavoriteFiltersNotifier(uid);
+          },
         ),
       ],
       child: MainApp(),

@@ -24,29 +24,6 @@ class HistoryPage extends StatefulWidget {
 }
 
 class _HistoryPageState extends State<HistoryPage> {
-  // List<Map<String, String>> historyData = [
-  //   {
-  //     "title": "Goof",
-  //     "date": "4/10 09:18", // month/day hh:mm
-  //     "description":
-  //         "I love how silly and carefree the moment felt. It reminded me of simpler times.",
-  //   },
-  //   {
-  //     "title": "Themepark",
-  //     "date": "4/15 09:18",
-  //     "description":
-  //         "I love how vibrant and fun the colors were, and the excitement was unforgettable.",
-  //   },
-  // ];
-  // List<Map<String, String>> historyData = List.generate(10, (index) {
-  //   return {
-  //     "title": "Entry ${index + 1}",
-  //     "date": "4/${10 + index} 09:18", // 4/10 to 4/19
-  //     "description":
-  //         "This is a description for Entry ${index + 1}. It might contain some longer content to preview.",
-  //   };
-  // });
-
   @override
   void initState() {
     super.initState();
@@ -191,7 +168,9 @@ class _HistoryPageState extends State<HistoryPage> {
                       borderRadius: BorderRadius.circular(32),
                     ),
                     child:
-                        value.userHistory!.isEmpty
+                        value
+                                .userHistory!
+                                .isEmpty // value.userHistory!.isEmpty
                             ? Center(
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -218,6 +197,7 @@ class _HistoryPageState extends State<HistoryPage> {
                             )
                             : AnimationLimiter(
                               child: ListView.builder(
+                                // start delete
                                 itemCount: value.userHistory!.length,
                                 itemBuilder: (context, index) {
                                   final entry = value.userHistory![index];
@@ -227,12 +207,53 @@ class _HistoryPageState extends State<HistoryPage> {
                                     child: SlideAnimation(
                                       verticalOffset: 0.0,
                                       horizontalOffset: 50.0,
-                                      child: buildHistoryListItem(
-                                        context,
-                                        entry.title,
-                                        entry.date,
-                                        entry.description,
+                                      child: Dismissible(
+                                        key: Key(entry.title + entry.date),
+                                        direction: DismissDirection.horizontal,
+                                        background: Container(
+                                          alignment: Alignment.centerLeft,
+                                          padding: const EdgeInsets.only(
+                                            left: 20,
+                                          ),
+                                          color: Colors.pink.shade50,
+                                          child: const Icon(
+                                            Icons.delete,
+                                            color: Colors.pink,
+                                          ),
+                                        ),
+                                        secondaryBackground: Container(
+                                          alignment: Alignment.centerRight,
+                                          padding: const EdgeInsets.only(
+                                            right: 20,
+                                          ),
+                                          color: Colors.pink.shade50,
+                                          child: const Icon(
+                                            Icons.delete,
+                                            color: Colors.pink,
+                                          ),
+                                        ),
+                                        onDismissed: (_) {
+                                          setState(() {
+                                            value.userHistory!.removeAt(index);
+                                          });
+                                          // You might also want to notify your backend or state manager here.
+                                          // For example:
+                                          // Provider.of<UserHistoryNotifier>(context, listen: false).deleteHistory(entry.id);
+                                        },
+                                        child: buildHistoryListItem(
+                                          context,
+                                          entry.title,
+                                          entry.date,
+                                          entry.description,
+                                        ),
                                       ),
+
+                                      // child: buildHistoryListItem(
+                                      //   context,
+                                      //   entry.title,
+                                      //   entry.date,
+                                      //   entry.description,
+                                      // ),
                                     ),
                                   );
                                 },

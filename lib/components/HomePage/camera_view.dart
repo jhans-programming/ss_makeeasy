@@ -11,12 +11,16 @@ class CameraView extends StatefulWidget {
     Key? key,
     required this.customPaint,
     required this.onImage,
+    required this.enableTakePicture,
+    this.onConfirmSelfie,
     this.onCameraFeedReady,
     this.onDetectorViewModeChanged,
     this.onCameraLensDirectionChanged,
     this.initialCameraLensDirection = CameraLensDirection.back,
   }) : super(key: key);
 
+  final Function? onConfirmSelfie;
+  final bool enableTakePicture;
   final CustomPaint? customPaint;
   final Function(InputImage inputImage) onImage;
   final VoidCallback? onCameraFeedReady;
@@ -64,7 +68,59 @@ class _CameraViewState extends State<CameraView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: _liveFeedBody());
+    return Scaffold(
+      body: Stack(
+        children: [
+          _liveFeedBody(),
+          if (widget.enableTakePicture)
+            Positioned(
+              bottom: 128,
+              left: 10,
+              right: 10,
+              child: ShutterButton(
+                onPressed: () async {
+                  final image = await _controller!.takePicture();
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        content: Image.file(File(image.path)),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text(
+                              "Retake",
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.secondary,
+                              ),
+                            ),
+                          ),
+                          ElevatedButton(
+                            onPressed: () async {
+                              //! Call callback function for saving file to storage
+                              widget.onConfirmSelfie!(image);
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.secondary,
+                            ),
+                            child: Text(
+                              "Use",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
+        ],
+      ),
+    );
   }
 
   Widget _liveFeedBody() {
@@ -192,6 +248,117 @@ class _CameraViewState extends State<CameraView> {
         rotation: rotation, // used only in Android
         format: format, // used only in iOS
         bytesPerRow: plane.bytesPerRow, // used only in iOS
+      ),
+    );
+  }
+}
+
+// A custom Flutter widget that represents a camera shutter button.
+class ShutterButton extends StatefulWidget {
+  // Callback function to be executed when the button is pressed.
+  final VoidCallback onPressed;
+  // The size of the button.
+  final double size;
+  // The color of the outer ring of the button.
+  final Color outerColor;
+  // The color of the inner circle of the button.
+  final Color innerColor;
+  // The padding around the inner circle.
+  final double innerPadding;
+
+  // Constructor for the ShutterButton widget.
+  const ShutterButton({
+    Key? key,
+    required this.onPressed,
+    this.size = 80.0, // Default size for the button
+    this.outerColor = Colors.white, // Default outer ring color
+    this.innerColor = Colors.white, // Default inner circle color
+    this.innerPadding = 5.0, // Default padding for the inner circle
+  }) : super(key: key);
+
+  @override
+  _ShutterButtonState createState() => _ShutterButtonState();
+}
+
+// The state class for the ShutterButton widget.
+class _ShutterButtonState extends State<ShutterButton>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize the animation controller for the button press effect.
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 150), // Duration of the animation
+    );
+
+    // Define a Tween for scaling the button during animation.
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.9).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeOut, // Use easeOut curve for a smooth press effect
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    // Dispose the animation controller when the widget is removed from the tree.
+    _controller.dispose();
+    super.dispose();
+  }
+
+  // Handles the tap down event, starting the animation.
+  void _onTapDown(TapDownDetails details) {
+    _controller.forward(); // Start the forward animation (scaling down)
+  }
+
+  // Handles the tap up event, reversing the animation and triggering onPressed.
+  void _onTapUp(TapUpDetails details) {
+    _controller.reverse(); // Reverse the animation (scaling up)
+    widget.onPressed(); // Execute the provided onPressed callback
+  }
+
+  // Handles the tap cancel event, reversing the animation.
+  void _onTapCancel() {
+    _controller.reverse(); // Reverse the animation (scaling up)
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTapDown: _onTapDown, // Register tap down event
+      onTapUp: _onTapUp, // Register tap up event
+      onTapCancel: _onTapCancel, // Register tap cancel event
+      child: ScaleTransition(
+        scale: _scaleAnimation, // Apply the scale animation to the button
+        child: Container(
+          width: widget.size,
+          height: widget.size,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle, // Make the outer container a circle
+            border: Border.all(
+              color: widget.outerColor, // Set outer border color
+              width: 4.0, // Set outer border width
+            ),
+          ),
+          child: Center(
+            child: Container(
+              width:
+                  widget.size -
+                  (widget.innerPadding * 2) -
+                  8, // Calculate inner circle size
+              height: widget.size - (widget.innerPadding * 2) - 8,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle, // Make the inner container a circle
+                color: widget.innerColor, // Set inner circle color
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }

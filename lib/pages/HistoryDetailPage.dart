@@ -37,12 +37,24 @@ class HistoryDetailPage extends StatelessWidget {
             actions: [
               ElevatedButton(
                 onPressed: () {
-                  _formKey.currentState!.save();
+                  // _formKey.currentState!.save();
+                  // if (_formKey.currentState!.validate()) {
+                  //   // Save state
+                  //   ScaffoldMessenger.of(context).showSnackBar(
+                  //     SnackBar(
+                  //       content: Text('$_title + $_desc'),
+                  //       duration: const Duration(seconds: 1),
+                  //     ),
+                  //   );
+                  // }
                   if (_formKey.currentState!.validate()) {
-                    // Save state
+                    _formKey.currentState!.save();
+
+                    value.updateHistory(date, _title!, _desc!, imagePath);
+
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text('$_title + $_desc'),
+                        content: Text('Changes saved.'),
                         duration: const Duration(seconds: 1),
                       ),
                     );
@@ -61,129 +73,173 @@ class HistoryDetailPage extends StatelessWidget {
           body: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Card(
-                elevation: 2,
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Row(
+              child: Column(
+                children: [
+                  Card(
+                    elevation: 2,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
                           children: [
-                            ClipOval(
-                              child: Image(
-                                image: const AssetImage(
-                                  'assets/images/profile.jpg',
-                                ), // Use your asset image
-                                width: 150,
-                                height: 150,
-                                fit:
-                                    BoxFit.cover, // Important: Use BoxFit.cover
-                              ),
+                            Row(
+                              children: [
+                                ClipOval(
+                                  child: Image(
+                                    image: const AssetImage(
+                                      'assets/images/profile.jpg',
+                                    ), // Use your asset image
+                                    width: 150,
+                                    height: 150,
+                                    fit:
+                                        BoxFit
+                                            .cover, // Important: Use BoxFit.cover
+                                  ),
+                                ),
+
+                                SizedBox(width: 24),
+
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Title",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w900,
+                                          color:
+                                              Theme.of(
+                                                context,
+                                              ).colorScheme.secondary,
+                                        ),
+                                      ),
+                                      TextFormField(
+                                        initialValue: title,
+                                        decoration: InputDecoration(
+                                          hintText: "Enter a title",
+                                          hintStyle: TextStyle(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onSurface
+                                                .withAlpha(50),
+                                          ),
+                                          fillColor:
+                                              Theme.of(
+                                                context,
+                                              ).colorScheme.surfaceDim,
+                                          filled: true,
+                                          border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              16,
+                                            ),
+                                            borderSide: BorderSide.none,
+                                          ),
+                                        ),
+
+                                        validator: (value) {
+                                          if (value == null || value.isEmpty) {
+                                            return 'Please enter a title';
+                                          }
+                                          return null;
+                                        },
+
+                                        onSaved: (value) {
+                                          _title = value;
+                                        },
+                                      ),
+
+                                      SizedBox(height: 8),
+
+                                      Text(
+                                        "Saved on $date", //the date is not editable
+                                        style: const TextStyle(
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
 
-                            SizedBox(width: 24),
+                            SizedBox(height: 16),
 
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Title",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w900,
-                                      color:
-                                          Theme.of(
-                                            context,
-                                          ).colorScheme.secondary,
-                                    ),
-                                  ),
-                                  TextFormField(
-                                    initialValue: title,
-                                    decoration: InputDecoration(
-                                      hintText: "Enter a title",
-                                      hintStyle: TextStyle(
-                                        color: Theme.of(
-                                          context,
-                                        ).colorScheme.onSurface.withAlpha(50),
-                                      ),
-                                      fillColor:
-                                          Theme.of(
-                                            context,
-                                          ).colorScheme.surfaceDim,
-                                      filled: true,
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(16),
-                                        borderSide: BorderSide.none,
-                                      ),
-                                    ),
-
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'Please enter a title';
-                                      }
-                                      return null;
-                                    },
-
-                                    onSaved: (value) {
-                                      _title = value;
-                                    },
-                                  ),
-
-                                  SizedBox(height: 8),
-
-                                  Text(
-                                    "Saved on $date", //the date is not editable
-                                    style: const TextStyle(color: Colors.grey),
-                                  ),
-                                ],
+                            Text(
+                              "Description",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w900,
+                                color: Theme.of(context).colorScheme.secondary,
                               ),
+                            ),
+                            TextFormField(
+                              initialValue: description,
+                              maxLines: 10,
+                              decoration: InputDecoration(
+                                hintText: "Enter a description",
+                                hintStyle: TextStyle(
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSurface.withAlpha(50),
+                                ),
+                                fillColor:
+                                    Theme.of(context).colorScheme.surfaceDim,
+                                filled: true,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                  borderSide: BorderSide.none,
+                                ),
+                              ),
+
+                              validator: (value) {
+                                return null;
+                              },
+
+                              onSaved: (value) {
+                                _desc = value;
+                              },
                             ),
                           ],
                         ),
-
-                        SizedBox(height: 16),
-
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 24),
+                  ElevatedButton(
+                    onPressed: () {
+                      // TODO: Recreate logic goes here
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: Colors.pink,
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 14,
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: const [
+                        Icon(Icons.refresh, color: Colors.pink),
+                        SizedBox(width: 8),
                         Text(
-                          "Description",
+                          "Recreate",
                           style: TextStyle(
-                            fontWeight: FontWeight.w900,
-                            color: Theme.of(context).colorScheme.secondary,
+                            color: Colors.pink,
+                            fontWeight: FontWeight.bold,
                           ),
-                        ),
-                        TextFormField(
-                          initialValue: description,
-                          maxLines: 10,
-                          decoration: InputDecoration(
-                            hintText: "Enter a description",
-                            hintStyle: TextStyle(
-                              color: Theme.of(
-                                context,
-                              ).colorScheme.onSurface.withAlpha(50),
-                            ),
-                            fillColor: Theme.of(context).colorScheme.surfaceDim,
-                            filled: true,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16),
-                              borderSide: BorderSide.none,
-                            ),
-                          ),
-
-                          validator: (value) {
-                            return null;
-                          },
-
-                          onSaved: (value) {
-                            _desc = value;
-                          },
                         ),
                       ],
                     ),
                   ),
-                ),
+                ],
               ),
             ),
           ),
