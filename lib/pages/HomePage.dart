@@ -216,34 +216,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         ),
       ),
 
-      //   child: Column(
-      //     children: [
-      //       Text(
-      //         "Choose your style",
-      //         style: TextStyle(
-      //           fontSize: 18,
-      //           fontWeight: FontWeight.bold,
-      //           color: Colors.white,
-      //           shadows: [
-      //             Shadow(color: Colors.black.withAlpha(255), blurRadius: 10),
-      //           ],
-      //         ),
-      //       ),
-      //       const SizedBox(height: 8),
-      //       DropdownMenu(
-      //         dropdownMenuEntries: CategoryFilter.entries,
-      //         initialSelection: selectedCategoryFilter,
-      //         textStyle: const TextStyle(color: Colors.white),
-      //         onSelected: (value) {
-      //           setState(() {
-      //             selectedCategoryFilter = value ?? CategoryFilter.All;
-      //           });
-      //         },
-      //       ),
-      //     ],
-      //   ),
-      // ),
-
       FilterSelector(
         optionChangeHandler: (page) => setState(() {
           selectedCategory = page;
@@ -349,13 +321,15 @@ final Map<String, Map<String, String>> styleInfo = {
   'daily': {
     'title': 'Last Friday Night',
     'description':
-        'This is a simple daily makeup routine that enhances your natural beauty without being too heavy.',
+        'This is a daily makeup style that is perfect for casual outings or everyday wear.\n\n'
+        '🎯 Products used:\n 1. Foundation\n 2. Concealer\n 3. Blush\n 4. Eyeshadows\n 5. Eyeliners\n 6. Eyebrows\n 7. Mascara\n 8. Liptint',
     'image': 'assets/images/daily.png',
   },
   'party': {
     'title': 'Party in The USA',
     'description':
-        'This party makeup routine is bold and glamorous, perfect for special occasions.',
+        
+        '🎯 Products used:\n 1. Foundation\n 2. Concealer\n 3. Blush\n 4. Eyeshadows\n 5. Eyeliners\n 6. Eyebrows\n 7. Mascara\n 8. Liptint',
     'image': 'assets/images/party.png',
   },
 };

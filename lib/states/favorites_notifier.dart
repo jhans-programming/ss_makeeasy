@@ -1,4 +1,3 @@
-// File: favorites_notifier.dart
 import 'package:flutter/material.dart';
 import 'package:makeeasy/utils/makeup_data.dart';
 import 'package:tuple/tuple.dart';

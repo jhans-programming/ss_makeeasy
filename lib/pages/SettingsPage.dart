@@ -95,7 +95,12 @@ class SettingsPage extends StatelessWidget {
             ElevatedButton(
               onPressed: () async {
                 await FirebaseAuth.instance.signOut();
-                // AuthGate will detect sign-out and show RegisterPage again
+
+                // Navigate directly to MainScreen and remove all previous routes
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => MainScreen()),
+                  (Route<dynamic> route) => false,
+                );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Theme.of(context).colorScheme.secondary,

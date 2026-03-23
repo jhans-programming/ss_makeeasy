@@ -1,250 +1,197 @@
 import 'package:flutter/material.dart';
-import 'package:makeeasy/pages/HistoryPage.dart';
 import 'package:makeeasy/states/history_notifier.dart';
-import 'package:makeeasy/utils/appStyle.dart';
 import 'package:provider/provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:makeeasy/pages/InstructionsPage.dart';
 
-class HistoryDetailPage extends StatelessWidget {
-  final String title;
-  final String date;
-  final String description;
-  final String imagePath;
+class HistoryDetailPage extends StatefulWidget {
+  final String historyDate; // use a unique field like date or ID
 
   const HistoryDetailPage({
     super.key,
-    required this.title,
-    required this.date,
-    required this.description,
-    required this.imagePath,
+    required this.historyDate,
   });
 
   @override
+  State<HistoryDetailPage> createState() => _HistoryDetailPageState();
+}
+
+class _HistoryDetailPageState extends State<HistoryDetailPage> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  String? _title;
+  String? _desc;
+  String? _imageUrl;
+  String? _date;
+  String? _category;
+  bool _loading = true;
+
+  String _getCategoryName(String? category) {
+    switch (category) {
+      case '0':
+        return "Party in the USA";
+      case '1':
+        return "Last Friday Night";
+      case '2':
+        return "Work from Home";
+      default:
+        return "Unknown Style";
+    }
+  }
+
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchHistoryDetail();
+  }
+
+  Future<void> _fetchHistoryDetail() async {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null) return;
+
+    final doc = await FirebaseFirestore.instance.collection('users').doc(uid).get();
+    final historyList = doc.data()?['history'] ?? [];
+
+    final entry = historyList.firstWhere(
+      (item) => item['date'].toDate().toString() == widget.historyDate,
+      orElse: () => null,
+    );
+
+    if (entry != null) {
+      setState(() {
+        _title = entry['title'];
+        _desc = entry['description'];
+        _imageUrl = entry['image'];
+        _category = entry['category'].toString();
+        _date = entry['date'].toDate().toString();
+        _loading = false;
+      });
+    } else {
+      setState(() => _loading = false);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
-    String? _title = title;
-    String? _desc = description;
-
-    return Consumer<UserHistoryNotifier>(
-      builder: (context, value, child) {
-        return Scaffold(
-          appBar: AppBar(
-            scrolledUnderElevation: 0,
-            title: Text(
-              "Edit History",
-              style: TextStyle(color: Theme.of(context).colorScheme.primary),
+    return Scaffold(
+      appBar: AppBar(
+        scrolledUnderElevation: 0,
+        title: Text("Edit History", style: TextStyle(color: Theme.of(context).colorScheme.primary)),
+        actions: [
+          ElevatedButton(
+            onPressed: _loading
+                ? null
+                : () {
+                    if (_formKey.currentState!.validate()) {
+                      _formKey.currentState!.save();
+                      Provider.of<UserHistoryNotifier>(context, listen: false)
+                          .updateHistory(_date!, _title!, _desc!, _imageUrl!);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Changes saved.')),
+                      );
+                    }
+                  },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.secondary,
+              foregroundColor: Colors.white,
             ),
-            actions: [
-              ElevatedButton(
-                onPressed: () {
-                  // _formKey.currentState!.save();
-                  // if (_formKey.currentState!.validate()) {
-                  //   // Save state
-                  //   ScaffoldMessenger.of(context).showSnackBar(
-                  //     SnackBar(
-                  //       content: Text('$_title + $_desc'),
-                  //       duration: const Duration(seconds: 1),
-                  //     ),
-                  //   );
-                  // }
-                  if (_formKey.currentState!.validate()) {
-                    _formKey.currentState!.save();
-
-                    value.updateHistory(date, _title!, _desc!, imagePath);
-
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Changes saved.'),
-                        duration: const Duration(seconds: 1),
-                      ),
-                    );
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).colorScheme.secondary,
-                  foregroundColor: Colors.white,
-                ),
-                child: Text("Save"),
-              ),
-              SizedBox(width: 16),
-            ],
+            child: const Text("Save"),
           ),
-
-          body: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: [
-                  Card(
-                    elevation: 2,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Form(
-                        key: _formKey,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Row(
-                              children: [
-                                ClipOval(
-                                  child: Image(
-                                    image: const AssetImage(
-                                      'assets/images/profile.jpg',
-                                    ), // Use your asset image
-                                    width: 150,
-                                    height: 150,
-                                    fit:
-                                        BoxFit
-                                            .cover, // Important: Use BoxFit.cover
-                                  ),
-                                ),
-
-                                SizedBox(width: 24),
-
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "Title",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w900,
-                                          color:
-                                              Theme.of(
-                                                context,
-                                              ).colorScheme.secondary,
-                                        ),
-                                      ),
-                                      TextFormField(
-                                        initialValue: title,
-                                        decoration: InputDecoration(
-                                          hintText: "Enter a title",
-                                          hintStyle: TextStyle(
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .onSurface
-                                                .withAlpha(50),
-                                          ),
-                                          fillColor:
-                                              Theme.of(
-                                                context,
-                                              ).colorScheme.surfaceDim,
-                                          filled: true,
-                                          border: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(
-                                              16,
-                                            ),
-                                            borderSide: BorderSide.none,
-                                          ),
-                                        ),
-
-                                        validator: (value) {
-                                          if (value == null || value.isEmpty) {
-                                            return 'Please enter a title';
-                                          }
-                                          return null;
-                                        },
-
-                                        onSaved: (value) {
-                                          _title = value;
-                                        },
-                                      ),
-
-                                      SizedBox(height: 8),
-
-                                      Text(
-                                        "Saved on $date", //the date is not editable
-                                        style: const TextStyle(
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-
-                            SizedBox(height: 16),
-
-                            Text(
-                              "Description",
-                              style: TextStyle(
-                                fontWeight: FontWeight.w900,
-                                color: Theme.of(context).colorScheme.secondary,
-                              ),
-                            ),
-                            TextFormField(
-                              initialValue: description,
-                              maxLines: 10,
-                              decoration: InputDecoration(
-                                hintText: "Enter a description",
-                                hintStyle: TextStyle(
-                                  color: Theme.of(
-                                    context,
-                                  ).colorScheme.onSurface.withAlpha(50),
-                                ),
-                                fillColor:
-                                    Theme.of(context).colorScheme.surfaceDim,
-                                filled: true,
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(16),
-                                  borderSide: BorderSide.none,
-                                ),
-                              ),
-
-                              validator: (value) {
-                                return null;
-                              },
-
-                              onSaved: (value) {
-                                _desc = value;
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 24),
-                  ElevatedButton(
-                    onPressed: () {
-                      // TODO: Recreate logic goes here
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: Colors.pink,
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 24,
-                        vertical: 14,
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: const [
-                        Icon(Icons.refresh, color: Colors.pink),
-                        SizedBox(width: 8),
-                        Text(
-                          "Recreate",
-                          style: TextStyle(
-                            color: Colors.pink,
-                            fontWeight: FontWeight.bold,
+          const SizedBox(width: 16),
+        ],
+      ),
+      body: _loading
+          ? const Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (_imageUrl != null)
+                        Center(
+                          child: CircleAvatar(
+                            radius: 60,
+                            backgroundImage: NetworkImage(_imageUrl!),
                           ),
                         ),
-                      ],
-                    ),
+                      const SizedBox(height: 24),
+                      Text("Title", style: Theme.of(context).textTheme.titleMedium),
+                      TextFormField(
+                        initialValue: _title,
+                        decoration: const InputDecoration(hintText: 'Enter a title'),
+                        validator: (value) => value == null || value.isEmpty ? 'Please enter a title' : null,
+                        onSaved: (value) => _title = value,
+                      ),
+                      const SizedBox(height: 12),
+                      Text("Saved on $_date", style: const TextStyle(color: Colors.grey)),
+                      const SizedBox(height: 24),
+                      Text("Description", style: Theme.of(context).textTheme.titleMedium),
+                      TextFormField(
+                        initialValue: _desc,
+                        maxLines: 10,
+                        decoration: const InputDecoration(hintText: 'Enter a description'),
+                        onSaved: (value) => _desc = value,
+                      ),
+                      const SizedBox(height: 24),
+
+                      if (_category != null)
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 12),
+                          child: Center(
+                            child: Text(
+                              "Style Used: ${_getCategoryName(_category)}",
+                              style: const TextStyle(
+                                color: Colors.grey,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ),
+
+                      Center(
+                        child: ElevatedButton.icon(
+                          onPressed: () {
+                            if (_category != null) {
+                              try {
+                                int selectedCategory = int.parse(_category!); // assuming stored as string in Firestore
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => InstructionsPage(selectedCategory: selectedCategory),
+                                  ),
+                                );
+                              } catch (e) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text("Invalid category data.")),
+                                );
+                              }
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text("No category found in this history item.")),
+                              );
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Theme.of(context).colorScheme.primary,
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                          ),
+                          icon: const Icon(Icons.replay),
+                          label: const Text("Recreate", style: TextStyle(fontSize: 16)),
+                        ),
+                      ),
+
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
-          ),
-        );
-      },
     );
   }
 }

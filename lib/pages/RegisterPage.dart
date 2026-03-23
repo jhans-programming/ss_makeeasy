@@ -306,19 +306,37 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
+ @override
+Widget build(BuildContext context) {
+  return Scaffold(
+    resizeToAvoidBottomInset: true,
+    body: Container(
       decoration: BoxDecoration(gradient: appGradients['primary']),
       width: MediaQuery.of(context).size.width,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 32),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: _isLoginPage ? _buildLoginPage() : _buildSignupPage(),
+      child: SafeArea(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              padding: EdgeInsets.only(
+                left: 32,
+                right: 32,
+                bottom: MediaQuery.of(context).viewInsets.bottom + 16,
+              ),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                child: IntrinsicHeight(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: _isLoginPage ? _buildLoginPage() : _buildSignupPage(),
+                  ),
+                ),
+              ),
+            );
+          },
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 }

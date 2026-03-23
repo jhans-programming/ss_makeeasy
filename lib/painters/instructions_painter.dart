@@ -4,11 +4,9 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mlkit_face_mesh_detection/google_mlkit_face_mesh_detection.dart';
 import 'package:makeeasy/utils/face_guidelines.dart';
-import 'package:makeeasy/utils/makeup_data.dart';
 import 'package:tuple/tuple.dart';
 
 import '../utils/coordinates_translator.dart';
-import '../utils/face_contours.dart';
 
 class InstructionsPainter extends CustomPainter {
   InstructionsPainter(

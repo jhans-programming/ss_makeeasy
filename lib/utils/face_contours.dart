@@ -41,58 +41,58 @@ Map<FacePart, List<Tuple2<List<int>, Color>>> getFacePartColors(
   MaterialColor bottomLipColor = facePartColors[FacePart.BottomLip]!;
 
   return {
-    // FacePart.LeftEyeliner: [
-    //   Tuple2(
-    //     [
-    //       359,
-    //       263,
-    //       263,
-    //       466,
-    //       466,
-    //       388,
-    //       388,
-    //       387,
-    //       387,
-    //       386,
-    //       386,
-    //       385,
-    //       385,
-    //       384,
-    //       384,
-    //       398,
-    //     ],
-    //     leftEyelinerColor.withAlpha(
-    //       selectedCategory == MakeupCategory.Category1 ? 0 : 120,
-    //     ),
-    //   ),
-    // ],
-    // FacePart.RightEyeliner: [
-    //   Tuple2(
-    //     [
-    //       130,
-    //       33,
-    //       33,
-    //       246,
-    //       246,
-    //       161,
-    //       161,
-    //       160,
-    //       160,
-    //       159,
-    //       159,
-    //       158,
-    //       158,
-    //       157,
-    //       157,
-    //       173,
-    //       //guide
-    //       //234, 93, 93, 132, 132, 215, 213, 213, 147, 147, 137, 137, 234,
-    //     ],
-    //     rightEyelinerColor.withAlpha(
-    //       selectedCategory == MakeupCategory.Category1 ? 0 : 120,
-    //     ),
-    //   ),
-    // ],
+    FacePart.LeftEyeliner: [
+      Tuple2(
+        [
+    359,
+    263,
+    263,
+    466,
+    466,
+    388,
+    388,
+    387,
+    387,
+    386,
+    386,
+    385,
+    385,
+    384,
+    384,
+    398,
+        ],
+        leftEyelinerColor.withAlpha(
+          selectedCategory == MakeupCategory.Category2 ? 0 : 120,
+        ),
+      ),
+    ],
+    FacePart.RightEyeliner: [
+      Tuple2(
+        [
+    130,
+    33,
+    33,
+    246,
+    246,
+    161,
+    161,
+    160,
+    160,
+    159,
+    159,
+    158,
+    158,
+    157,
+    157,
+    173,
+          //guide
+          //234, 93, 93, 132, 132, 215, 213, 213, 147, 147, 137, 137, 234,
+        ],
+        rightEyelinerColor.withAlpha(
+          selectedCategory == MakeupCategory.Category2 ? 0 : 120,
+        ),
+      ),
+    ],
     FacePart.LeftEyebrow: [
       // Left to Right
       // shade 400 ke atas makin terang

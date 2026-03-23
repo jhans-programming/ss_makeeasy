@@ -8,6 +8,6 @@ class HistoryItem {
 
   final String title;
   final String description;
-  final String date;
+  final DateTime date;
   final String imagePath;
 }

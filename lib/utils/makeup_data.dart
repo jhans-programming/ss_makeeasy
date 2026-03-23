@@ -6,6 +6,30 @@ enum MakeupCategory { Category1, Category2 }
 Map<MakeupCategory, List<Map<FacePart, MaterialColor>>> makeupChoices = {
   MakeupCategory.Category1: [
     {
+      FacePart.LeftEyeliner: MaterialColor(0xFF000000, <int, Color>{
+        50: Color(0xFF000000),
+        100: Color(0xFF000000),
+        200: Color(0xFF000000),
+        300: Color(0xFF000000),
+        400: Color(0xFF000000),
+        500: Color(0xFF000000),
+        600: Color(0xFF000000),
+        700: Color(0xFF000000),
+        800: Color(0xFF000000),
+        900: Color(0xFF000000),
+      }),
+      FacePart.RightEyeliner: MaterialColor(0xFF000000, <int, Color>{
+        50: Color(0xFF000000),
+        100: Color(0xFF000000),
+        200: Color(0xFF000000),
+        300: Color(0xFF000000),
+        400: Color(0xFF000000),
+        500: Color(0xFF000000),
+        600: Color(0xFF000000),
+        700: Color(0xFF000000),
+        800: Color(0xFF000000),
+        900: Color(0xFF000000),
+      }),
       //? Eyebrows
       FacePart.LeftEyebrow: MaterialColor(0xFF765548, <int, Color>{
         50: Color(0xFFF2E7E4),
@@ -42,7 +66,7 @@ Map<MakeupCategory, List<Map<FacePart, MaterialColor>>> makeupChoices = {
         600: Color(0xFFC93194),
         700: Color(0xFFB52B84),
         800: Color(0xFFA12574),
-        900: Color(0xFF8D1F64),
+        900: Color.fromARGB(255, 0, 0, 0),
       }),
       FacePart.RightTopEyelid: MaterialColor(0xFFDD37A4, <int, Color>{
         50: Color(0xFFFCE6F5),
@@ -54,7 +78,7 @@ Map<MakeupCategory, List<Map<FacePart, MaterialColor>>> makeupChoices = {
         600: Color(0xFFC93194),
         700: Color(0xFFB52B84),
         800: Color(0xFFA12574),
-        900: Color(0xFF8D1F64),
+        900: Color.fromARGB(255, 0, 0, 0),
       }),
       //? Bottom Eyelids
       FacePart.LeftBottomEyelid: MaterialColor(0xFF9C385B, <int, Color>{
@@ -159,6 +183,30 @@ Map<MakeupCategory, List<Map<FacePart, MaterialColor>>> makeupChoices = {
   ],
   MakeupCategory.Category2: [
     {
+      FacePart.LeftEyeliner: MaterialColor(0xFF000000, <int, Color>{
+        50: Color(0xFF000000),
+        100: Color(0xFF000000),
+        200: Color(0xFF000000),
+        300: Color(0xFF000000),
+        400: Color(0xFF000000),
+        500: Color(0xFF000000),
+        600: Color(0xFF000000),
+        700: Color(0xFF000000),
+        800: Color(0xFF000000),
+        900: Color(0xFF000000),
+      }),
+      FacePart.RightEyeliner: MaterialColor(0xFF000000, <int, Color>{
+        50: Color(0xFF000000),
+        100: Color(0xFF000000),
+        200: Color(0xFF000000),
+        300: Color(0xFF000000),
+        400: Color(0xFF000000),
+        500: Color(0xFF000000),
+        600: Color(0xFF000000),
+        700: Color(0xFF000000),
+        800: Color(0xFF000000),
+        900: Color(0xFF000000),
+      }),
       //? Eyebrows
       FacePart.LeftEyebrow: MaterialColor(0xFF5A4134, <int, Color>{
         50: Color(0xFFF2E7E4),

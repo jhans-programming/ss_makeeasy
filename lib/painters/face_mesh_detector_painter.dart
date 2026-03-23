@@ -58,6 +58,38 @@ class FaceMeshDetectorPainter extends CustomPainter {
       textPainter.paint(canvas, offsetPosition);
     }
 
+        void drawEyeliner(List<Tuple2<List<int>, Color>> facePart, FaceMesh mesh) {
+      List<int> pointIndices = facePart[0].item1;
+      Color color = facePart[0].item2;
+
+      List<Offset> points =
+          pointIndices.map((index) {
+            return Offset(
+              translateX(
+                mesh.points[index].x.toDouble(),
+                size,
+                imageSize,
+                rotation,
+                cameraLensDirection,
+              ),
+              translateY(
+                mesh.points[index].y.toDouble(),
+                size,
+                imageSize,
+                rotation,
+                cameraLensDirection,
+              ),
+            );
+          }).toList();
+
+      Paint eyelinerPaint =
+          Paint()
+            ..color = color
+            ..style = PaintingStyle.stroke
+            ..strokeWidth = 2.0;
+      canvas.drawPoints(PointMode.lines, points, eyelinerPaint);
+    }
+
     void drawFacePart(List<Tuple2<List<int>, Color>> facePart, FaceMesh mesh) {
       for (final triangle in facePart) {
         Path trianglePath = Path();
@@ -156,6 +188,11 @@ class FaceMeshDetectorPainter extends CustomPainter {
       //? Top Eyelids
       drawFacePart(facePartColors[FacePart.LeftTopEyelid], mesh);
       drawFacePart(facePartColors[FacePart.RightTopEyelid], mesh);
+
+      //eyeliner
+      drawEyeliner(facePartColors[FacePart.LeftEyeliner], mesh);
+      drawEyeliner(facePartColors[FacePart.RightEyeliner], mesh);
+
 
       //? Bottom Eyelids
       drawFacePart(facePartColors[FacePart.LeftBottomEyelid], mesh);
